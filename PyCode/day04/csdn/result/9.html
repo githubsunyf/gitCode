@@ -1,0 +1,3308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/qq_42305209/article/details/104345335"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="report" content='{"pid":"blog"}'>
+    <meta name="referrer" content="always">
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+        <meta name="csdn-baidu-search"  content='{"autorun":true,"install":true,"keyword":"Java的内存区域详解。_运维_qq_42305209的博客-CSDN博客"}'>
+    
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>Java的内存区域详解。_运维_qq_42305209的博客-CSDN博客</title>
+    <meta name="description" content="1、运行时数据区Java虚拟机在执行java程序的过程中将它所管理的内存划分为以下几个运行时数据区域运维">
+    <script src='//g.csdnimg.cn/tingyun/1.8.3/blog.js' type='text/javascript'></script>
+        
+                    <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-afd5e40070.min.css">
+                            <script type="application/ld+json">{"@context":"https:\/\/ziyuan.baidu.com\/contexts\/cambrian.jsonld","@id":"https:\/\/blog.csdn.net\/qq_42305209\/article\/details\/104345335","appid":1638831770136827,"title":"Java\u7684\u5185\u5b58\u533a\u57df\u8be6\u89e3\u3002_\u8fd0\u7ef4_qq_42305209\u7684\u535a\u5ba2-CSDN\u535a\u5ba2","pubDate":"2020-02-16T17:36:53","upDate":"2020-02-16T17:36:53"}</script>
+    
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-c9d2f651cc.min.css">
+    
+<!--    自定义皮肤样式-->
+    
+    <script type="text/javascript">
+        var username = "qq_42305209";
+        var blog_address = "https://blog.csdn.net/qq_42305209";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = "";
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "http://passport.csdn.net/account/login?from=https://blog.csdn.net/qq_42305209/article/details/104345335"
+        var blogUrl = "https://blog.csdn.net/";
+
+        var curSkin = "skin3-template";
+        // 收藏所需数据
+        var articleTitle = "Java的内存区域详解。";
+        var articleDesc = "1、运行时数据区Java虚拟机在执行java程序的过程中将它所管理的内存划分为以下几个运行时数据区域运维";
+
+        var articleTitles = "Java的内存区域详解。_运维_qq_42305209的博客-CSDN博客";
+        
+        var nickName = "花开心就好";
+        var isCorporate = false;
+        var subDomainBlogUrl = "https://blog.csdn.net/"
+        var digg_base_url = "https://blog.csdn.net/qq_42305209";
+        var articleDetailUrl = "https://blog.csdn.net/qq_42305209/article/details/104345335";
+        var isShowThird = "0"
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <!--js引用-->
+            <script src="//g.csdnimg.cn/??fixed-sidebar/1.1.6/fixed-sidebar.js,report/1.4.1/report.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css">
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+</head>
+<body class="nodata " > 
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+    <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging-e040f0c7c8.css">
+
+<script type="text/javascript">
+	var NEWS_FEED = function(){}
+</script>
+
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+<div class="main_father clearfix d-flex justify-content-center" style="height:100%;"> 
+    <div class="container clearfix" id="mainBox">
+        <div  class='space_container'></div>
+        <main>
+            <div class="blog-content-box">
+    <div class="article-header-box">
+        <div class="article-header">
+            <div class="article-title-box">
+                <h1 class="title-article">Java的内存区域详解。</h1>
+            </div>
+            <div class="article-info-box">
+                <div class="article-bar-top">
+                    <!--文章类型-->
+                    <span class="article-type type-1 float-left">原创</span>                                            <span class="c-gray">置顶</span>
+                                                                                                                                            <a class="follow-nickName" href="https://me.csdn.net/qq_42305209" target="_blank" rel="noopener">花开心就好</a>
+                    <span class="time">最后发布于2020-02-16 17:36:53                    </span>
+                    <span class="read-count">阅读数 158</span>
+                    <a id='blog_detail_zk_collection' data-report-click='{"mod":"popu_823"}'>
+                        <svg class="icon">
+                            <use xlink:href="#icon-csdnc-Collection-G" ></use>
+                        </svg>
+                        收藏
+                    </a>
+                </div>
+                                <div class="up-time">发布于2020-02-16 17:36:53</div>
+                <div class="slide-content-box">
+                                                        <div class="tags-box artic-tag-box">
+                           <span class="label">分类专栏：</span>
+                                                                                             <a class="tag-link" target="_blank" rel="noopener"
+                                      href="https://blog.csdn.net/qq_42305209/category_9416878.html">
+                                       java                                   </a>
+                                                                                                                            <a class="tag-link" target="_blank" rel="noopener"
+                                      href="https://blog.csdn.net/qq_42305209/category_9714729.html">
+                                       Jvm                                   </a>
+                                                                                  </div>
+                                                                                                           <div class="article-copyright">
+                        <span class="creativecommons">
+                            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"></a>
+                            <span>
+                                版权声明：本文为博主原创文章，遵循<a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"> CC 4.0 BY-SA </a>版权协议，转载请附上原文出处链接和本声明。                            </span>
+                            <div class="article-source-link2222">
+                                本文链接：<a href="https://blog.csdn.net/qq_42305209/article/details/104345335">https://blog.csdn.net/qq_42305209/article/details/104345335</a>
+                            </div>
+                        </span> 
+                        </div>
+                                                                                </div>
+                <div class="operating">
+                                                                <a class="href-article-edit slide-toggle">展开</a>
+                                    </div>
+            </div>
+        </div>
+    </div>
+    <article class="baidu_pl">
+        <!--python安装手册开始-->
+                <!--python安装手册结束-->
+                <!--####专栏广告位图文切换开始-->
+                                    <!--####专栏广告位图文切换结束-->
+         <div id="article_content" class="article_content clearfix">
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-833878f763.css" />
+                                        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-833878f763.css" />
+                <div class="htmledit_views" id="content_views">
+                                            <h3>1、运行时数据区</h3>
+
+<p>Java虚拟机在执行java程序的过程中将它所管理的内存划分为以下几个运行时数据区域：</p>
+
+<p><strong>1、程序计数器（Program Counter Register)</strong></p>
+
+<p><strong>2、虚拟机栈（VM Stack)</strong></p>
+
+<p><strong>3、本地方法栈（Native Method Stack)</strong></p>
+
+<p><strong>4、堆（Heap)</strong></p>
+
+<p><strong>5、方法区（Method Area)</strong></p>
+
+<p>线程私有区域（程序计数器、虚拟机栈、本地方法栈），线程共享区域（堆、方法区），直接内存。线程私有数据区域生命周期与线程相同, 依赖用户线程的启动/结束 而 创建/销毁(在 Hotspot VM 内）。线程共享区域随虚拟机的启动/关闭而创建/销毁。直接内存并不是 JVM 运行时数据区的一部分。如下图：</p>
+
+<p><img alt="" height="417" src="https://img-blog.csdnimg.cn/20200216171423855.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzA1MjA5,size_16,color_FFFFFF,t_70" width="647" /></p>
+
+<p> </p>
+
+<p><span style="color:#f33b45;"><strong>1、程序计数器：</strong></span></p>
+
+<p>程序计数器是一块较小的内存空间，它可以当作是线程所执行的字节码的行号指令，为了线程切换后能够恢复到正确的执行位置，每条线程都需要一个独立的程序计数器，个线程之间的程序计数器互不影响，各自独立存储。这类内存区域为“线程私有”的区域。此内存区域是唯一一个没有OutOfMemoryError的区域。</p>
+
+<p><strong><span style="color:#f33b45;">2、Java虚拟机栈</span></strong></p>
+
+<p>与程序计数器一样，Java虚拟机栈也是线程私有的，它的生命周期和线程相同，虚拟机栈描述的是Java方法执行的线程内存模型：每一个方法执行的时候都会同步一个栈帧。用于存储局部变量表，数栈，动态连接，方法出口等信息。每一个方法调用直至被执行完毕，就对应一个栈帧在虚拟机中从入栈到出栈的过程。</p>
+
+<p>这个区域规定了两种异常情况：</p>
+
+<p><span><strong> 1）、如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出StackOverFlowError</strong></span></p>
+
+<p><span><strong> 2）、如果虚拟机在扩展时无法申请到足够的内存空间，则抛出OutOfMemoryError异常</strong></span></p>
+
+<p><span style="color:#f33b45;"><strong>3、本地方法栈</strong></span></p>
+
+<p>本地方法栈与虚拟机栈发挥的作用非常相似，区别在于虚拟机方法栈为虚拟机执行Java方法服务，本地方法栈为虚拟机使用Native方法服务。Hotspot虚拟机将本地方法栈和虚拟机方法栈合二为一。与虚拟机栈一样，本地方法栈在栈深度溢出或者栈扩展失败时分别抛出<span><strong>StackOverFlowError和OutOfMemoryError异常。</strong></span></p>
+
+<p><span style="color:#f33b45;"><strong>4、Java堆</strong></span></p>
+
+<p>Java堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。所有创建的对象和数组都存放在堆上。Java堆是垃圾收集器管理的主要区域，垃圾收集器主要基于**分代收集算法**，因此从GC的角度对堆进行划分：新生代（Eden空间、From Survivor空间、To Survivor空间）、老年代。如果在堆中没有内存完成示例分配、并且堆也无法再扩展，将会抛出OutOfMemoryError异常。堆的大小可以通过-Xmx（jvm运行时堆的最大值）和-Xms（jvm运行时堆的最小值）控制。</p>
+
+<p><span style="color:#f33b45;"><strong>5. 方法区</strong></span></p>
+
+<p>1、方法区和Java堆一样，是各个线程的共享区域。方它用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。</p>
+
+<p>2、<span style="color:#f33b45;">运行时常量池</span><span>是方法区的一部分</span>。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项信息是常量池（Constant Pool Table),用于存放编译期生成的各种字面量和符号引用，这部分内容将在类加载后进入方法区的运行时常量池。java虚拟机对class文件每一部分的格式都有严格的规定，每一个字节用于存储哪种数据都必须符号规范上的要求才会被虚拟机认可、装载和执行。当常量池无法申请到内存时会抛出<span><strong>OutOfMemoryError异常。</strong></span></p>
+
+<p><strong><span style="color:#f33b45;">6. 直接内存(Direct Memory)</span></strong></p>
+
+<p>直接内存（Direct Memory)并不是虚拟机运行时的数据区的一部分，也不是java虚拟机规范中定义的内存区域，不会受到java堆大小的限制，不受jvm gc的管理。这部分内存如果频繁使用，也可能导致OutOfMemoryError异常, 测试本机直接内存溢出，DirectMemory容量可通过-XX:MaxDirectMemorySize设置，如果不指定，默认与Java堆最大值（-Xmx指定）一样。</p>
+
+<p> </p>
+                                    </div>
+                                                <div class="more-toolbox">
+                <div class="left-toolbox">
+                    <ul class="toolbox-list">
+                        
+                        <li class="tool-item tool-active is-like "><a href="javascript:;"><svg class="icon" aria-hidden="true">
+                            <use xlink:href="#csdnc-thumbsup"></use>
+                        </svg><span class="name">点赞</span>
+                        <span class="count">1</span>
+                        </a></li>
+                        <li class="tool-item tool-active is-collection "><a href="javascript:;" data-report-click='{"mod":"popu_824"}'><svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-csdnc-Collection-G" ></use>
+                        </svg><span class="name">收藏</span></a></li>
+                        <li class="tool-item tool-active is-share"><a href="javascript:;"><svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-csdnc-fenxiang"></use>
+                        </svg>分享</a></li>
+                        <!--打赏开始-->
+                                                <!--打赏结束-->
+                                                <li class="tool-item tool-more">
+                            <a>
+                            <svg t="1575545411852" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5717" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style type="text/css"></style></defs><path d="M179.176 499.222m-113.245 0a113.245 113.245 0 1 0 226.49 0 113.245 113.245 0 1 0-226.49 0Z" p-id="5718"></path><path d="M509.684 499.222m-113.245 0a113.245 113.245 0 1 0 226.49 0 113.245 113.245 0 1 0-226.49 0Z" p-id="5719"></path><path d="M846.175 499.222m-113.245 0a113.245 113.245 0 1 0 226.49 0 113.245 113.245 0 1 0-226.49 0Z" p-id="5720"></path></svg>
+                            </a>
+                            <ul class="more-box">
+                                <li class="item"><a class="article-report">文章举报</a></li>
+                            </ul>
+                        </li>
+                                            </ul>
+                </div>
+                            </div>
+            <div class="person-messagebox">
+                <div class="left-message"><a href="https://blog.csdn.net/qq_42305209">
+                    <img src="https://profile.csdnimg.cn/6/6/8/3_qq_42305209" class="avatar_pic" username='qq_42305209'>
+                                            <img src="https://g.csdnimg.cn/static/user-reg-year/1x/2.png" class="user-years">
+                                    </a></div>
+                <div class="middle-message">
+                                        <div class="title"><span class="tit"><a href="https://blog.csdn.net/qq_42305209" data-report-click='{"mod":"popu_379"}' target="_blank">花开心就好</a></span>
+                                            </div>
+                    <div class="text"><span>发布了31 篇原创文章</span> · <span>获赞 27</span> · <span>访问量 3684</span></div>
+                </div>
+                                <div class="right-message">
+                                            <a href=https://im.csdn.net/im/main.html?userName=qq_42305209 target="_blank" 
+                            class="btn btn-sm btn-red-hollow bt-button personal-letter">私信
+                        </a>
+                                                            <a class="btn btn-sm  bt-button personal-watch" data-report-click='{"mod":"popu_379"}'>关注</a>
+                                    </div>
+                            </div>
+                    </div>
+    </article>
+    
+</div>
+
+
+            <div class="hide-article-box hide-article-pos text-center">
+            <a class="btn-readmore" data-report-view='{"mod":"popu_376","dest":"https://blog.csdn.net/qq_42305209/article/details/104345335","strategy":"readmore"}' data-report-click='{"mod":"popu_376","dest":"https://blog.csdn.net/qq_42305209/article/details/104345335","strategy":"readmore"}'>
+                展开阅读全文
+                <svg class="icon chevrondown" aria-hidden="true">
+                    <use xlink:href="#csdnc-chevrondown"></use>
+                </svg>
+            </a>
+        </div>
+    <script>
+    $("#blog_detail_zk_collection").click(function(){
+        window.csdn.articleCollection()
+    })
+</script>
+
+            <div id="dmp_ad_58"><div id="kp_box_58" data-pid="58"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-gw-3+1f-3d+2z"
+     data-ad-client="ca-pub-1076724771190722"
+     data-ad-slot="7909296258"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=58&a=731&c=0&k=&d=1&t=3&u=481f551f2c33471fae3ec53ab2c431c0"></div></div>            
+            <a id="commentBox" name="commentBox"></a>
+<div class="comment-box">
+	<div class="comment-edit-box d-flex">
+		<a id="commentsedit"></a>
+		<div class="user-img">
+			<a href="javascript:void(0);" target="_blank" rel="noopener">
+				<img class="show_loginbox" src="//g.csdnimg.cn/static/user-img/anonymous-User-img.png">
+			</a>
+		</div>
+		<form id="commentform">
+			<input type="hidden" id="comment_replyId">
+			<textarea class="comment-content" name="comment_content" id="comment_content" placeholder="想对作者说点什么" maxlength="1000"></textarea>
+			<div class="opt-box"> <!-- d-flex -->
+				<div id="ubbtools" class="add_code">
+					<a href="#insertcode" code="code" target="_self"><i class="icon iconfont icon-daima"></i></a>
+				</div>
+				<input type="hidden" id="comment_replyId" name="comment_replyId">
+				<input type="hidden" id="article_id" name="article_id" value="104345335">
+				<input type="hidden" id="comment_userId" name="comment_userId" value="">
+				<input type="hidden" id="commentId" name="commentId" value="">
+				<div style="display: none;" class="csdn-tracking-statistics tracking-click" data-report-click='{"mod":"popu_384","dest":""}'><a href="#" target="_blank" class="comment_area_btn" rel="noopener">发表评论</a></div>
+				<div class="dropdown" id="myDrap">
+					<a class="dropdown-face d-flex align-items-center" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<div class="txt-selected text-truncate">添加代码片</div>
+					<svg class="icon d-block" aria-hidden="true">
+						<use xlink:href="#csdnc-triangledown"></use>
+					</svg>
+					</a>
+					<ul class="dropdown-menu" id="commentCode" aria-labelledby="drop4">
+						<li><a data-code="html">HTML/XML</a></li>
+						<li><a data-code="objc">objective-c</a></li>
+						<li><a data-code="ruby">Ruby</a></li>
+						<li><a data-code="php">PHP</a></li>
+						<li><a data-code="csharp">C</a></li>
+						<li><a data-code="cpp">C++</a></li>
+						<li><a data-code="javascript">JavaScript</a></li>
+						<li><a data-code="python">Python</a></li>
+						<li><a data-code="java">Java</a></li>
+						<li><a data-code="css">CSS</a></li>
+						<li><a data-code="sql">SQL</a></li>
+						<li><a data-code="plain">其它</a></li>
+					</ul>
+				</div>  
+				<div class="right-box">
+                                        <span id="tip_comment" class="tip">还能输入<em>1000</em>个字符</span>
+					<input type="button" class="btn btn-sm btn-cancel d-none" value="取消回复">
+					<input type="submit" class="btn btn-sm btn-red btn-comment" value="发表评论">
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<div class="btn btn-sm btn-link-blue" id="btnMoreComment"></div>
+		</div>
+	</div>
+</div>
+            <div class="recommend-box">
+                                    <div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_29660957/article/details/93175834","strategy":"OPENSEARCH","index":"0"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_29660957/article/details/93175834" target="_blank"  rel="noopener" title="深入理解java虚拟机(JVM)--热点知识总结">
+		<h4 class="text-truncate oneline">
+				深入理解java虚拟机(JVM)--热点知识总结		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">06-24</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					81</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_29660957/article/details/93175834" target="_blank" rel="noopener" title="深入理解java虚拟机(JVM)--热点知识总结">
+				<span class="desc oneline">本文参考自https://github.com/Snailclimb/JavaGuide/blob/3965c02cc0f294b0bd3580df4868d5e396959e2e/Java%E7%9...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_29660957">来自：	<span class="blog_title"> 旧时佑忆的空间</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/chenpengfei1990/article/details/53381458","strategy":"OPENSEARCH","index":"1"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/chenpengfei1990/article/details/53381458" target="_blank"  rel="noopener" title="hashMap，treeMap，LinkedHashMap使用以及区别分析">
+		<h4 class="text-truncate oneline">
+				hashMap，treeMap，LinkedHashMap使用以及区别分析		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-28</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					4866</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/chenpengfei1990/article/details/53381458" target="_blank" rel="noopener" title="hashMap，treeMap，LinkedHashMap使用以及区别分析">
+				<span class="desc oneline">https://hanyu.baidu.com/shici/s?wd=%E9%95%BF%E6%98%A5%E5%8D%97%E5%85%B3%E5%8C%BA%E6%96%B0%E5%A4%A9%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/chenpengfei1990">来自：	<span class="blog_title"> 身高175</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_43655481/article/details/100190106","strategy":"OPENSEARCH","index":"2"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_43655481/article/details/100190106" target="_blank"  rel="noopener" title="9.1号学习">
+		<h4 class="text-truncate oneline">
+				<em>9</em>.1号学习		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">09-02</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					20</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_43655481/article/details/100190106" target="_blank" rel="noopener" title="9.1号学习">
+				<span class="desc oneline">1.java代码执行过程，cpu，编译https://www.zhihu.com/search?type=content&amp;q=%E5%9F%BA%E4%BA%8E%E5%AF%84%E5%AD...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43655481">来自：	<span class="blog_title"> weixin_43655481的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/ahua186186/article/details/84541649","strategy":"OPENSEARCH","index":"3"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/ahua186186/article/details/84541649" target="_blank"  rel="noopener" title="在JAVA中使用Spring JMS集成Websphere MQ，Topic发布和订阅">
+		<h4 class="text-truncate oneline">
+				在JAVA中使用Spring JMS集成Websphere MQ，Topic发布和订阅		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">03-26</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					209</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/ahua186186/article/details/84541649" target="_blank" rel="noopener" title="在JAVA中使用Spring JMS集成Websphere MQ，Topic发布和订阅">
+				<span class="desc oneline">转自：http://blog.sincerad.com/archives/%E5%9C%A8java%E4%B8%AD%E4%BD%BF%E7%94%A8spring-jms%E9%9B%86%E6%...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/ahua186186">来自：	<span class="blog_title"> ahua186186的专栏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><div id="kp_box_59" data-pid="59"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-gp-e+1c-4d+81"
+     data-ad-client="ca-pub-1076724771190722"
+     data-ad-slot="2356783728"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=59&a=944&c=0&k=&d=1&t=3&u=79666b959ded40c89f79f766f24578ca"></div></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/chenhq1991/article/details/7755418","strategy":"OPENSEARCH","index":"4"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/chenhq1991/article/details/7755418" target="_blank"  rel="noopener" title="《传智播客毕向东Java基础全套视频教程》下载地址">
+		<h4 class="text-truncate oneline">
+				《传智播客毕向东Java基础全套视频教程》下载地址		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">07-17</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					4万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/chenhq1991/article/details/7755418" target="_blank" rel="noopener" title="《传智播客毕向东Java基础全套视频教程》下载地址">
+				<span class="desc oneline">ed2k://|file|%E4%BC%A0%E6%99%BA%E6%92%AD%E5%AE%A2%E6%AF%95%E5%90%91%E4%B8%9CJava%E5%9F%BA%E7%A1%80%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/chenhq1991">来自：	<span class="blog_title"> chenhq1991的专栏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/hongtu1993/article/details/37730325","strategy":"OPENSEARCH","index":"5"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/hongtu1993/article/details/37730325" target="_blank"  rel="noopener" title="java HttpUrlConnection get和post 模拟请求 调用接口">
+		<h4 class="text-truncate oneline">
+				java HttpUrlConnection get和post 模拟请求 调用接口		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">07-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3222</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/hongtu1993/article/details/37730325" target="_blank" rel="noopener" title="java HttpUrlConnection get和post 模拟请求 调用接口">
+				<span class="desc oneline">https://hanyu.baidu.com/shici/s?wd=%E4%B8%AD%E5%B1%B1%E6%9C%8D%E5%8A%A1%E7%A1%AE%E5%AE%9E%E6%AD%A3%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/hongtu1993">来自：	<span class="blog_title"> 毛宇鹏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/huangwp6012/article/details/84602658","strategy":"OPENSEARCH","index":"6"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/huangwp6012/article/details/84602658" target="_blank"  rel="noopener" title="MongoDB Java Driver中的写操作策略 ">
+		<h4 class="text-truncate oneline">
+				MongoDB Java Driver中的写操作策略 		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">05-28</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					35</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/huangwp6012/article/details/84602658" target="_blank" rel="noopener" title="MongoDB Java Driver中的写操作策略 ">
+				<span class="desc oneline">【转】https://github.com/xbwen/xbwen.github.io/wiki/MongoDB-Java-Driver%E4%B8%AD%E7%9A%84%E5%86%99%E6%9...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/huangwp6012">来自：	<span class="blog_title"> 叶知秋</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/u011004598/article/details/84624870","strategy":"OPENSEARCH","index":"7"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/u011004598/article/details/84624870" target="_blank"  rel="noopener" title="myecplise里java ee开发视图和java开发视图区别">
+		<h4 class="text-truncate oneline">
+				myecplise里java ee开发视图和java开发视图区别		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">08-12</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					201</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/u011004598/article/details/84624870" target="_blank" rel="noopener" title="myecplise里java ee开发视图和java开发视图区别">
+				<span class="desc oneline">[url]http://www.baidu.com/s?wd=myecplise%E9%87%8Cperspective%E4%B8%AD%E7%9A%84%20java%20EE%20%E5%92%...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/u011004598">来自：	<span class="blog_title"> u011004598的专栏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/forlong401/article/details/51758181","strategy":"OPENSEARCH","index":"8"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/forlong401/article/details/51758181" target="_blank"  rel="noopener" title="java 字母数字和下划线 正则表达式">
+		<h4 class="text-truncate oneline">
+				java 字母数字和下划线 正则表达式		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">06-25</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					4715</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/forlong401/article/details/51758181" target="_blank" rel="noopener" title="java 字母数字和下划线 正则表达式">
+				<span class="desc oneline">http://androidren.com/index.php?qa=395&amp;qa_1=java-%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97%E5%92%8C%E4%B8...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/forlong401">来自：	<span class="blog_title"> forlong401的专栏--有问题上：http://www.androidren.com</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><div id="kp_box_60" data-pid="60"><script type="text/javascript">
+        (function() {
+            var s = "_" + Math.random().toString(36).slice(2);
+            document.write('<div style="" id="' + s + '"></div>');
+            (window.slotbydup = window.slotbydup || []).push({
+                id: "u3502456",
+                container: s
+            });
+        })();
+</script>
+<!-- 多条广告如下脚本只需引入一次 -->
+<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js" async="async" defer="defer" >
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=60&a=763&c=0&k=&d=1&t=3&u=d2c76b0d5e7840ab9846dc3e967dba9c"></div></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/hongtu1993/article/details/37738629","strategy":"OPENSEARCH","index":"9"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/hongtu1993/article/details/37738629" target="_blank"  rel="noopener" title="java HttpClient get post请求 调用接口">
+		<h4 class="text-truncate oneline">
+				java HttpClient get post请求 调用接口		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">07-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2588</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/hongtu1993/article/details/37738629" target="_blank" rel="noopener" title="java HttpClient get post请求 调用接口">
+				<span class="desc oneline">https://hanyu.baidu.com/shici/s?wd=%E5%B7%B4%E5%BD%A6%E6%B7%96%E5%B0%94%E4%B8%B4%E6%B2%B3%E5%8C%BA%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/hongtu1993">来自：	<span class="blog_title"> 毛宇鹏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/mycs2011/article/details/83875535","strategy":"OPENSEARCH","index":"10"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/mycs2011/article/details/83875535" target="_blank"  rel="noopener" title="JAVA中使用jolt调用TUXEDO服务[原创]">
+		<h4 class="text-truncate oneline">
+				JAVA中使用jolt调用TUXEDO服务[原创]		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">03-21</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					167</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/mycs2011/article/details/83875535" target="_blank" rel="noopener" title="JAVA中使用jolt调用TUXEDO服务[原创]">
+				<span class="desc oneline">声明，本文转载自：http://softhood.net/cn/2010/08/04/java%E4%B8%AD%E4%BD%BF%E7%94%A8jolt%E8%B0%83%E7%94%A8tuxe...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/mycs2011">来自：	<span class="blog_title"> mycs2011的专栏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+			<div class="recommend-item-box blog-expert-recommend-box">
+			<div class="d-flex">
+				<div class="blog-expert-recommend">
+					<div class="blog-expert">
+						<div class="blog-expert-flexbox"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/xiaohuanqi/article/details/50980541","strategy":"OPENSEARCH","index":"11"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/xiaohuanqi/article/details/50980541" target="_blank"  rel="noopener" title="多线程同步的巧用">
+		<h4 class="text-truncate oneline">
+				多线程同步的巧用		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">03-25</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					653</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/xiaohuanqi/article/details/50980541" target="_blank" rel="noopener" title="多线程同步的巧用">
+				<span class="desc oneline">博客转移到个人站点： http://www.wangchengmeng.club/2018/02/04/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E7...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaohuanqi">来自：	<span class="blog_title"> xiaohuanqi的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/u012686462/article/details/53811730","strategy":"OPENSEARCH","index":"12"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/u012686462/article/details/53811730" target="_blank"  rel="noopener" title="Android运营商名称的显示规则">
+		<h4 class="text-truncate oneline">
+				Android运营商名称的显示规则		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">12-22</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3258</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/u012686462/article/details/53811730" target="_blank" rel="noopener" title="Android运营商名称的显示规则">
+				<span class="desc oneline">https://hanyu.baidu.com/shici/s?wd=%E6%80%80%E5%8C%96%E9%B9%A4%E5%9F%8E%E5%8C%BA%E4%BD%93%E8%82%B2%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/u012686462">来自：	<span class="blog_title"> 发飙的IT宅男专栏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/chenpengfei1990/article/details/53411291","strategy":"OPENSEARCH","index":"13"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/chenpengfei1990/article/details/53411291" target="_blank"  rel="noopener" title="结合多线程实例谈一谈LinkedBlockingQueue的原理">
+		<h4 class="text-truncate oneline">
+				结合多线程实例谈一谈LinkedBlockingQueue的原理		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-30</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					1663</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/chenpengfei1990/article/details/53411291" target="_blank" rel="noopener" title="结合多线程实例谈一谈LinkedBlockingQueue的原理">
+				<span class="desc oneline">https://hanyu.baidu.com/shici/s?wd=%E6%AD%A6%E6%B1%89%E9%BB%84%E9%99%82%E5%8C%BA%E9%95%BF%E8%BD%A9%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/chenpengfei1990">来自：	<span class="blog_title"> 身高175</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><div id="kp_box_61" data-pid="61"><script type="text/javascript">
+        (function() {
+            var s = "_" + Math.random().toString(36).slice(2);
+            document.write('<div style="" id="' + s + '"></div>');
+            (window.slotbydup = window.slotbydup || []).push({
+                id: "u3565309",
+                container: s
+            });
+        })();
+</script>
+<!-- 多条广告如下脚本只需引入一次 -->
+<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js" async="async" defer="defer" >
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=61&a=622&c=0&k=&d=1&t=3&u=56421ab1d5d14e1883bfd5b9944a8da2"></div></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/u012421039/article/details/68945504","strategy":"OPENSEARCH","index":"14"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/u012421039/article/details/68945504" target="_blank"  rel="noopener" title="Jmeter开发自定义函数(32位小写md5加密)">
+		<h4 class="text-truncate oneline">
+				Jmeter开发自定义函数(<em>3</em>2位小写md<em>5</em>加密)		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">04-01</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2182</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/u012421039/article/details/68945504" target="_blank" rel="noopener" title="Jmeter开发自定义函数(32位小写md5加密)">
+				<span class="desc oneline">https://hanyu.baidu.com/shici/s?wd=%E6%88%90%E9%83%BD%E9%87%91%E7%89%9B%E5%8C%BA%E6%B2%99%E6%B2%B3%E...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/chenpengfei1990/article/details/53381002","strategy":"OPENSEARCH","index":"15"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/chenpengfei1990/article/details/53381002" target="_blank"  rel="noopener" title="工厂模式">
+		<h4 class="text-truncate oneline">
+				工厂模式		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-28</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					168</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/chenpengfei1990/article/details/53381002" target="_blank" rel="noopener" title="工厂模式">
+				<span class="desc oneline">https://hanyu.baidu.com/shici/s?wd=%E9%83%91%E5%B7%9E%E9%87%91%E6%B0%B4%E5%8C%BA%E7%87%95%E5%BA%84%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/chenpengfei1990">来自：	<span class="blog_title"> 身高175</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/u013912696/article/details/100639143","strategy":"OPENSEARCH","index":"16"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/u013912696/article/details/100639143" target="_blank"  rel="noopener" title="java中的i++与++i">
+		<h4 class="text-truncate oneline">
+				java中的i++与++i		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">09-08</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					45</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/u013912696/article/details/100639143" target="_blank" rel="noopener" title="java中的i++与++i">
+				<span class="desc oneline">查看链接：https://www.junhaow.com/2018/08/07/035%20%7C%20%E5%AD%A6%E4%B9%A0%20i++%20%E5%92%8C%20++i%20%E7...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/u013912696">来自：	<span class="blog_title"> u013912696的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/u011486491/article/details/79071837","strategy":"OPENSEARCH","index":"17"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/u011486491/article/details/79071837" target="_blank"  rel="noopener" title="ReentrantLock">
+		<h4 class="text-truncate oneline">
+				ReentrantLock		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">01-16</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					161</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/u011486491/article/details/79071837" target="_blank" rel="noopener" title="ReentrantLock">
+				<span class="desc oneline">ReentrantLock参考：https://github.com/Mr-YangCheng/ForAndroidInterview/blob/master/java/%5BJava%5D%20%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/u011486491">来自：	<span class="blog_title"> 子敬的技术博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/u012901416/article/details/84119671","strategy":"OPENSEARCH","index":"18"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/u012901416/article/details/84119671" target="_blank"  rel="noopener" title="java正则表达式找出不包含特定字符串">
+		<h4 class="text-truncate oneline">
+				java正则表达式找出不包含特定字符串		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">12-24</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					126</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/u012901416/article/details/84119671" target="_blank" rel="noopener" title="java正则表达式找出不包含特定字符串">
+				<span class="desc oneline">参考资料[url]http://www.imkevinyang.com/2009/08/%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/u012901416">来自：	<span class="blog_title"> u012901416的专栏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><div id="kp_box_62" data-pid="62"><script type="text/javascript">
+        (function() {
+            var s = "_" + Math.random().toString(36).slice(2);
+            document.write('<div style="" id="' + s + '"></div>');
+            (window.slotbydup = window.slotbydup || []).push({
+                id: "u3565311",
+                container: s
+            });
+        })();
+</script>
+<!-- 多条广告如下脚本只需引入一次 -->
+<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js" async="async" defer="defer" >
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=62&a=623&c=0&k=&d=1&t=3&u=bac90e06913043acbb0f4c35475bced6"></div></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/zy00000000001/article/details/52795870","strategy":"OPENSEARCH","index":"19"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/zy00000000001/article/details/52795870" target="_blank"  rel="noopener" title="ThreadLocal学习整理">
+		<h4 class="text-truncate oneline">
+				ThreadLocal学习整理		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">10-12</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					483</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/zy00000000001/article/details/52795870" target="_blank" rel="noopener" title="ThreadLocal学习整理">
+				<span class="desc oneline">文章仅仅用于个人的学习记录，基本上内容都是网上各个大神的杰作，此处摘录过来以自己的理解学习方式记录一下。    个人最为认可和推崇的大神文章：    http://qifuguang.me/2015/...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/zy00000000001">来自：	<span class="blog_title"> 宇你有缘</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/X8i0Bev/article/details/101086604","strategy":"BlogCommendHotData","index":"20"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/X8i0Bev/article/details/101086604" target="_blank"  rel="noopener" title="终于明白阿里百度这样的大公司，为什么面试经常拿ThreadLocal考验求职者了">
+		<h4 class="text-truncate oneline">
+				终于明白阿里百度这样的大公司，为什么面试经常拿ThreadLocal考验求职者了		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">09-20</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					14万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/X8i0Bev/article/details/101086604" target="_blank" rel="noopener" title="终于明白阿里百度这样的大公司，为什么面试经常拿ThreadLocal考验求职者了">
+				<span class="desc oneline">点击上面↑「爱开发」关注我们每晚10点，捕获技术思考和创业资源洞察什么是ThreadLocalThreadLocal是一个本地线程副本变量工具类，各个线程都拥有一份线程私......</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/X8i0Bev">来自：	<span class="blog_title"> 爱开发</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_45081575/article/details/102886718","strategy":"BlogCommendHotData","index":"21"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_45081575/article/details/102886718" target="_blank"  rel="noopener" title="《奇巧淫技》系列-python！！每天早上八点自动发送天气预报邮件到QQ邮箱">
+		<h4 class="text-truncate oneline">
+				《奇巧淫技》系列-python！！每天早上八点自动发送天气预报邮件到QQ邮箱		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">01-19</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					7万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_45081575/article/details/102886718" target="_blank" rel="noopener" title="《奇巧淫技》系列-python！！每天早上八点自动发送天气预报邮件到QQ邮箱">
+				<span class="desc oneline">将代码部署服务器，每日早上定时获取到天气数据，并发送到邮箱。也可以说是一个小人工智障。思路可以运用在不同地方，主要介绍的是思路。...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45081575">来自：	<span class="blog_title"> SunriseCai的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/csdnnews/article/details/103097703","strategy":"BlogCommendHotData","index":"22"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/csdnnews/article/details/103097703" target="_blank"  rel="noopener" title="加快推动区块链技术和产业创新发展，2019可信区块链峰会在京召开">
+		<h4 class="text-truncate oneline">
+				加快推动区块链技术和产业创新发展，201<em>9</em>可信区块链峰会在京召开		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-18</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					9万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/csdnnews/article/details/103097703" target="_blank" rel="noopener" title="加快推动区块链技术和产业创新发展，2019可信区块链峰会在京召开">
+				<span class="desc oneline">11月8日，由中国信息通信研究院、中国通信标准化协会、中国互联网协会、可信区块链推进计划联合主办，科技行者协办的2019可信区块链峰会将在北京悠唐皇冠假日酒店开幕。　　区块链技术被认为是继蒸汽机、电力...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/csdnnews">来自：	<span class="blog_title"> CSDN资讯</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_35190492/article/details/103105780","strategy":"BlogCommendHotData","index":"23"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_35190492/article/details/103105780" target="_blank"  rel="noopener" title="阿里面试官问我：如何设计秒杀系统？我的回答让他比起大拇指">
+		<h4 class="text-truncate oneline">
+				阿里面试官问我：如何设计秒杀系统？我的回答让他比起大拇指		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-18</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_35190492/article/details/103105780" target="_blank" rel="noopener" title="阿里面试官问我：如何设计秒杀系统？我的回答让他比起大拇指">
+				<span class="desc oneline">你知道的越多，你不知道的越多  点赞再看，养成习惯  GitHub上已经开源 https://github.com/JavaFamily 有一线大厂面试点脑图和个人联系方式，欢迎Star和指教前言Re...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35190492">来自：	<span class="blog_title"> 敖丙</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><div id="kp_box_63" data-pid="63"><script type="text/javascript">
+        (function() {
+            var s = "_" + Math.random().toString(36).slice(2);
+            document.write('<div style="" id="' + s + '"></div>');
+            (window.slotbydup = window.slotbydup || []).push({
+                id: "u4221910",
+                container: s
+            });
+        })();
+</script>
+<!-- 多条广告如下脚本只需引入一次 -->
+<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js" async="async" defer="defer" >
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=63&a=1405&c=0&k=&d=1&t=3&u=82bab4081da741ecae26222cf709e315"></div></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_41505957/article/details/103138305","strategy":"BlogCommendHotData","index":"24"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_41505957/article/details/103138305" target="_blank"  rel="noopener" title="C语言魔塔游戏">
+		<h4 class="text-truncate oneline">
+				C语言魔塔游戏		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-08</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					5万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_41505957/article/details/103138305" target="_blank" rel="noopener" title="C语言魔塔游戏">
+				<span class="desc oneline">很早就很想写这个，今天终于写完了。游戏截图：编译环境: VS2017游戏需要一些图片，如果有想要的或者对游戏有什么看法的可以加我的QQ 2985486630 讨论，如果暂时没有回应，可以在博客下方留言...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41505957">来自：	<span class="blog_title"> 张宜强的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_35190492/article/details/103153444","strategy":"BlogCommendHotData","index":"25"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_35190492/article/details/103153444" target="_blank"  rel="noopener" title="面试官问我：什么是消息队列？什么场景需要他？用了会出现什么问题？">
+		<h4 class="text-truncate oneline">
+				面试官问我：什么是消息队列？什么场景需要他？用了会出现什么问题？		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-20</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_35190492/article/details/103153444" target="_blank" rel="noopener" title="面试官问我：什么是消息队列？什么场景需要他？用了会出现什么问题？">
+				<span class="desc oneline">你知道的越多，你不知道的越多  点赞再看，养成习惯  GitHub上已经开源 https://github.com/JavaFamily 有一线大厂面试点脑图、个人联系方式和人才交流群，欢迎Star和...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35190492">来自：	<span class="blog_title"> 敖丙</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/AndrExpert/article/details/103156318","strategy":"BlogCommendHotData","index":"26"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/AndrExpert/article/details/103156318" target="_blank"  rel="noopener" title="Android性能优化(4)：UI渲染机制以及优化">
+		<h4 class="text-truncate oneline">
+				Android性能优化(4)：UI渲染机制以及优化		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-20</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3400</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/AndrExpert/article/details/103156318" target="_blank" rel="noopener" title="Android性能优化(4)：UI渲染机制以及优化">
+				<span class="desc oneline">文章目录1. 渲染机制分析1.1 渲染机制1.2 卡顿现象1.3 内存抖动2. 渲染优化方式2.1 过度绘制优化2.1.1 Show GPU overdraw2.1.2 Profile GPU Ren...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/AndrExpert">来自：	<span class="blog_title"> 蒋东国的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/Developlee/article/details/103175967","strategy":"BlogCommendHotData","index":"27"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/Developlee/article/details/103175967" target="_blank"  rel="noopener" title="微服务中的Kafka与Micronaut">
+		<h4 class="text-truncate oneline">
+				微服务中的Kafka与Micronaut		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-21</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2502</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/Developlee/article/details/103175967" target="_blank" rel="noopener" title="微服务中的Kafka与Micronaut">
+				<span class="desc oneline">今天，我们将通过Apache Kafka主题构建一些彼此异步通信的微服务。我们使用Micronaut框架，它为与Kafka集成提供专门的库。让我们简要介绍一下示例系统的体系结构。我们有四个微型服务：订...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/Developlee">来自：	<span class="blog_title"> liululee的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/csdnnews/article/details/103193692","strategy":"BlogCommendHotData","index":"28"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/csdnnews/article/details/103193692" target="_blank"  rel="noopener" title="致 Python 初学者们！">
+		<h4 class="text-truncate oneline">
+				致 Python 初学者们！		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-21</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/csdnnews/article/details/103193692" target="_blank" rel="noopener" title="致 Python 初学者们！">
+				<span class="desc oneline">作者| 许向武责编 | 屠敏出品 | CSDN 博客前言在 Python 进阶的过程中，相信很多同学应该大致上学习了很多 Python 的基础知识，也正在努力成长。在此期间，一定遇到了很多的困惑，对未...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/csdnnews">来自：	<span class="blog_title"> CSDN资讯</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><div id="kp_box_64" data-pid="64"><div id="three_ad23" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 852,
+                h : 60,
+                showid : 'GNKXx7',
+                placeholderId: "three_ad23",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 18,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Lato,-apple-system,SF UI Text,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 14,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 0,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=64&a=555&c=0&k=&d=1&t=3&u=d02d4a97dca44c39a575d01e37f89442"></div></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_45036710/article/details/103226451","strategy":"BlogCommendHotData","index":"29"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_45036710/article/details/103226451" target="_blank"  rel="noopener" title="究竟你适不适合买Mac？">
+		<h4 class="text-truncate oneline">
+				究竟你适不适合买Mac？		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-24</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					7万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_45036710/article/details/103226451" target="_blank" rel="noopener" title="究竟你适不适合买Mac？">
+				<span class="desc oneline">我清晰的记得，刚买的macbook pro回到家，开机后第一件事情，就是上了淘宝网，花了500元钱，找了一个上门维修电脑的师傅，上门给我装了一个windows系统。。。。。。表砍我。。。当时买mac的...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45036710">来自：	<span class="blog_title"> qq_45036710的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qing_gee/article/details/103231927","strategy":"BlogCommendHotData","index":"30"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qing_gee/article/details/103231927" target="_blank"  rel="noopener" title="程序员一般通过什么途径接私活？">
+		<h4 class="text-truncate oneline">
+				程序员一般通过什么途径接私活？		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-25</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					12万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qing_gee/article/details/103231927" target="_blank" rel="noopener" title="程序员一般通过什么途径接私活？">
+				<span class="desc oneline">二哥，你好，我想知道一般程序猿都如何接私活，我也想接，能告诉我一些方法吗？上面是一个读者“烦不烦”问我的一个问题。其实不止是“烦不烦”，还有很多读者问过我类似这样的问题。我接的私活不算多，挣到的钱也没...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qing_gee">来自：	<span class="blog_title"> 沉默王二</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_35190492/article/details/103232854","strategy":"BlogCommendHotData","index":"31"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_35190492/article/details/103232854" target="_blank"  rel="noopener" title="字节跳动面试官这样问消息队列：分布式事务、重复消费、顺序消费，我整理了一下">
+		<h4 class="text-truncate oneline">
+				字节跳动面试官这样问消息队列：分布式事务、重复消费、顺序消费，我整理了一下		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-25</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					7942</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_35190492/article/details/103232854" target="_blank" rel="noopener" title="字节跳动面试官这样问消息队列：分布式事务、重复消费、顺序消费，我整理了一下">
+				<span class="desc oneline">你知道的越多，你不知道的越多  点赞再看，养成习惯  GitHub上已经开源 https://github.com/JavaFamily 有一线大厂面试点脑图、个人联系方式和人才交流群，欢迎Star和...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35190492">来自：	<span class="blog_title"> 敖丙</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_43764365/article/details/103539728","strategy":"BlogCommendHotData","index":"32"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_43764365/article/details/103539728" target="_blank"  rel="noopener" title="Python爬虫爬取淘宝，京东商品信息">
+		<h4 class="text-truncate oneline">
+				Python爬虫爬取淘宝，京东商品信息		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-09</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					1万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_43764365/article/details/103539728" target="_blank" rel="noopener" title="Python爬虫爬取淘宝，京东商品信息">
+				<span class="desc oneline">小编是一个理科生，不善长说一些废话。简单介绍下原理然后直接上代码。使用的工具（Python+pycharm2019.3+selenium+xpath+chromedriver）其中要使用pycharm...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43764365">来自：	<span class="blog_title"> qq_43764365的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_35190492/article/details/103965492","strategy":"BlogCommendHotData","index":"33"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_35190492/article/details/103965492" target="_blank"  rel="noopener" title="阿里程序员写了一个新手都写不出的低级bug，被骂惨了。">
+		<h4 class="text-truncate oneline">
+				阿里程序员写了一个新手都写不出的低级bug，被骂惨了。		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">01-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_35190492/article/details/103965492" target="_blank" rel="noopener" title="阿里程序员写了一个新手都写不出的低级bug，被骂惨了。">
+				<span class="desc oneline">这种新手都不会范的错，居然被一个工作好几年的小伙子写出来，差点被当场开除了。...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35190492">来自：	<span class="blog_title"> 敖丙</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><div id="kp_box_65" data-pid="65"><div id="three_ad23" class="mediav_ad" ></div>
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<script>
+                                               NEWS_FEED({
+                w: 852,
+                h : 60,
+                showid : 'GNKXx7',
+                placeholderId: "three_ad23",
+                inject : 'define',
+                define : {
+                    imagePosition : 'left',
+                    imageBorderRadius : 3,
+                    imageWidth: 90,
+                    imageHeight: 60,
+                    imageFill : 'clip',
+                    displayImage : true,
+                    displayTitle : true,
+                    titleFontSize: 18,
+                    titleFontColor: '#000',
+                    titleFontFamily : 'Lato,-apple-system,SF UI Text,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif',
+                    titleFontWeight: 'bold',
+                    titlePaddingTop : 0,
+                    titlePaddingRight : 0,
+                    titlePaddingBottom : 5,
+                    titlePaddingLeft : 16,
+                    displayDesc : true,
+                    descFontSize: 14,
+                    descFontColor: '#8e959a',
+                    descFontFamily : 'Microsoft Yahei',
+                    paddingTop : 0,
+                    paddingRight : 0,
+                    paddingBottom : 0,
+                    paddingLeft : 0,
+                    backgroundColor: '#fff',
+                    hoverColor: '#000'
+                      }
+                  })
+                                        </script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=65&a=555&c=0&k=&d=1&t=3&u=e5a8a435871343a585477b483f10d2c5"></div></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/HarderXin/article/details/103971493","strategy":"BlogCommendHotData","index":"34"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/HarderXin/article/details/103971493" target="_blank"  rel="noopener" title="Java工作4年来应聘要16K最后没要,细节如下。。。">
+		<h4 class="text-truncate oneline">
+				Java工作4年来应聘要1<em>6</em>K最后没要,细节如下。。。		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">01-14</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/HarderXin/article/details/103971493" target="_blank" rel="noopener" title="Java工作4年来应聘要16K最后没要,细节如下。。。">
+				<span class="desc oneline">前奏：今天2B哥和大家分享一位前几天面试的一位应聘者，工作4年26岁，统招本科。以下就是他的简历和面试情况。基本情况：专业技能：1、&nbsp;熟悉Sping了解SpringMVC、SpringBoo...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/HarderXin">来自：	<span class="blog_title"> HarderXin的专栏</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/wo541075754/article/details/104028012","strategy":"BlogCommendHotData","index":"35"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/wo541075754/article/details/104028012" target="_blank"  rel="noopener" title="SpringBoot2.x系列教程（三十六）SpringBoot之Tomcat配置">
+		<h4 class="text-truncate oneline">
+				SpringBoot2.x系列教程（三十六）SpringBoot之Tomcat配置		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">01-18</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2579</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/wo541075754/article/details/104028012" target="_blank" rel="noopener" title="SpringBoot2.x系列教程（三十六）SpringBoot之Tomcat配置">
+				<span class="desc oneline">Spring Boot默认内嵌的Tomcat为Servlet容器，关于Tomcat的所有属性都在ServerProperties配置类中。同时，也可以实现一些接口来自定义内嵌Servlet容器和内嵌T...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/wo541075754">来自：	<span class="blog_title"> 程序新视界</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_34409973/article/details/104048903","strategy":"BlogCommendHotData","index":"36"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_34409973/article/details/104048903" target="_blank"  rel="noopener" title="Python绘图，圣诞树，花，爱心  |  Turtle篇">
+		<h4 class="text-truncate oneline">
+				Python绘图，圣诞树，花，爱心  |  Turtle篇		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-12</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					7916</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_34409973/article/details/104048903" target="_blank" rel="noopener" title="Python绘图，圣诞树，花，爱心  |  Turtle篇">
+				<span class="desc oneline">每周每日，分享Python实战代码，入门资料，进阶资料，基础语法，爬虫，数据分析，web网站，机器学习，深度学习等等。公众号回复【进群】沟通交流吧，QQ扫码进群学习吧微信群 QQ群 1.画圣诞树imp...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34409973">来自：	<span class="blog_title"> Python家庭的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/sinat_33921105/article/details/104066631","strategy":"BlogCommendHotData","index":"37"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/sinat_33921105/article/details/104066631" target="_blank"  rel="noopener" title="作为一个程序员，CPU的这些硬核知识你必须会！">
+		<h4 class="text-truncate oneline">
+				作为一个程序员，CPU的这些硬核知识你必须会！		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">01-21</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/sinat_33921105/article/details/104066631" target="_blank" rel="noopener" title="作为一个程序员，CPU的这些硬核知识你必须会！">
+				<span class="desc oneline">CPU对每个程序员来说，是个既熟悉又陌生的东西？如果你只知道CPU是中央处理器的话，那可能对你并没有什么用，那么作为程序员的我们，必须要搞懂的就是CPU这家伙是如何运行的，尤其要搞懂它里面的寄存器是怎...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_33921105">来自：	<span class="blog_title"> 编码之外的技术博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/u014044812/article/details/104076639","strategy":"BlogCommendHotData","index":"38"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/u014044812/article/details/104076639" target="_blank"  rel="noopener" title="破14亿，Python分析我国存在哪些人口危机！">
+		<h4 class="text-truncate oneline">
+				破14亿，Python分析我国存在哪些人口危机！		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-04</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/u014044812/article/details/104076639" target="_blank" rel="noopener" title="破14亿，Python分析我国存在哪些人口危机！">
+				<span class="desc oneline">一、背景二、爬取数据三、数据分析1、总人口2、男女人口比例3、人口城镇化4、人口增长率5、人口老化（抚养比）6、各省人口7、世界人口四、遇到的问题遇到的问题1、数据分页，需要获取从1949-2018年...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014044812">来自：	<span class="blog_title"> 猪哥</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><div id="kp_box_66" data-pid="66"><script type="text/javascript">
+        (function() {
+            var s = "_" + Math.random().toString(36).slice(2);
+            document.write('<div style="" id="' + s + '"></div>');
+            (window.slotbydup = window.slotbydup || []).push({
+                id: "u4623747",
+                container: s
+            });
+        })();
+</script>
+<!-- 多条广告如下脚本只需引入一次 -->
+<script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js" async="async" defer="defer" >
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=66&a=1755&c=0&k=&d=1&t=3&u=073fabdf81ab47ef9b917a4479d7ab48"></div></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_45899321/article/details/104114991","strategy":"BlogCommendHotData","index":"39"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_45899321/article/details/104114991" target="_blank"  rel="noopener" title="听说想当黑客的都玩过这个Monyer游戏（1~14攻略）">
+		<h4 class="text-truncate oneline">
+				听说想当黑客的都玩过这个Monyer游戏（1~14攻略）		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_45899321/article/details/104114991" target="_blank" rel="noopener" title="听说想当黑客的都玩过这个Monyer游戏（1~14攻略）">
+				<span class="desc oneline">第零关进入传送门开始第0关（游戏链接）请点击链接进入第1关： 连接在左边→ ←连接在右边看不到啊。。。。（只能看到一堆大佬做完的留名，也能看到菜鸡的我，在后面~~）直接fn+f12吧&lt;span&amp;...</span>
+			</a>
+			<span class="blog_title_box oneline ">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+											<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45899321">来自：	<span class="blog_title"> 永恒之蓝的博客</span></a>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/csdnnews/article/details/103154693","strategy":"BlogCommendHotData","index":"3"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/csdnnews/article/details/103154693" target="_blank"  rel="noopener" title="8年经验面试官详解 Java 面试秘诀">
+		<h4 class="text-truncate oneline">
+				8年经验面试官详解 Java 面试秘诀		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-19</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					14万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/csdnnews/article/details/103154693" target="_blank" rel="noopener" title="8年经验面试官详解 Java 面试秘诀">
+				<span class="desc oneline">作者 |胡书敏
+
+责编 | 刘静
+
+出品 | CSDN（ID：CSDNnews）
+
+本人目前在一家知名外企担任架构师，而且最近八年来，在多家外企和互联网公司担任Java技术面试官，前后累计面试了有两三...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/lfdfhl/article/details/103230553","strategy":"BlogCommendHotData","index":"5"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/lfdfhl/article/details/103230553" target="_blank"  rel="noopener" title="MyBatis研习录(01)——MyBatis概述与入门">
+		<h4 class="text-truncate oneline">
+				MyBatis研习录(01)——MyBatis概述与入门		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">11-24</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3362</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/lfdfhl/article/details/103230553" target="_blank" rel="noopener" title="MyBatis研习录(01)——MyBatis概述与入门">
+				<span class="desc oneline">MyBatis 是一款优秀的持久层框架，它支持定制化 SQL、存储过程以及高级映射。MyBatis原本是apache的一个开源项目iBatis, 2010年该项目由apache software fo...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/LoraRae/article/details/104010251","strategy":"BlogCommendHotData","index":"10"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/LoraRae/article/details/104010251" target="_blank"  rel="noopener" title="Python爬虫精简步骤1 获取数据">
+		<h4 class="text-truncate oneline">
+				Python爬虫精简步骤1 获取数据		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-14</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					894</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/LoraRae/article/details/104010251" target="_blank" rel="noopener" title="Python爬虫精简步骤1 获取数据">
+				<span class="desc oneline">爬虫，从本质上来说，就是利用程序在网上拿到对我们有价值的数据。
+爬虫能做很多事，能做商业分析，也能做生活助手，比如：分析北京近两年二手房成交均价是多少？广州的Python工程师平均薪资是多少？北京哪...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_44924238/article/details/104080312","strategy":"BlogCommendHotData","index":"14"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_44924238/article/details/104080312" target="_blank"  rel="noopener" title="web前端javascript+jquery知识点总结">
+		<h4 class="text-truncate oneline">
+				web前端javascript+jquery知识点总结		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-15</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					294</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_44924238/article/details/104080312" target="_blank" rel="noopener" title="web前端javascript+jquery知识点总结">
+				<span class="desc oneline">1.Javascript 语法.用途
+javascript 在前端网页中占有非常重要的地位，可以用于验证表单，制作特效等功能，它是一种描述语言，也是一种基于对象（Object）和事件驱动并具有安全性...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><script type="text/javascript" src="//rabc1.iteye.com/production/res/rxjg.js?pkcgstj=jm"></script></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/xufive/article/details/104093197","strategy":"BlogCommendHotData","index":"15"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/xufive/article/details/104093197" target="_blank"  rel="noopener" title="Python实战：抓肺炎疫情实时数据，画2019-nCoV疫情地图">
+		<h4 class="text-truncate oneline">
+				Python实战：抓肺炎疫情实时数据，画2019-nCoV疫情地图		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-06</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					4万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/xufive/article/details/104093197" target="_blank" rel="noopener" title="Python实战：抓肺炎疫情实时数据，画2019-nCoV疫情地图">
+				<span class="desc oneline">今天，群里白垩老师问如何用python画武汉肺炎疫情地图。白垩老师是研究海洋生态与地球生物的学者，国家重点实验室成员，于不惑之年学习python，实为我等学习楷模。先前我并没有关注武汉肺炎的具体数据，...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/csdnnews/article/details/104137953","strategy":"BlogCommendHotData","index":"17"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/csdnnews/article/details/104137953" target="_blank"  rel="noopener" title="在家远程办公效率低？那你一定要收好这个「在家办公」神器！">
+		<h4 class="text-truncate oneline">
+				在家远程办公效率低？那你一定要收好这个「在家办公」神器！		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-01</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					1万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/csdnnews/article/details/104137953" target="_blank" rel="noopener" title="在家远程办公效率低？那你一定要收好这个「在家办公」神器！">
+				<span class="desc oneline">相信大家都已经收到国务院延长春节假期的消息，接下来，在家远程办公可能将会持续一段时间。
+
+但是问题来了。远程办公不是人在电脑前就当坐班了，相反，对于沟通效率，文件协作，以及信息安全都有着极高的要求。有...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/sinat_33921105/article/details/104142623","strategy":"BlogCommendHotData","index":"18"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/sinat_33921105/article/details/104142623" target="_blank"  rel="noopener" title="作为一个程序员，内存和磁盘的这些事情，你不得不知道啊！！！">
+		<h4 class="text-truncate oneline">
+				作为一个程序员，内存和磁盘的这些事情，你不得不知道啊！！！		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-02</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/sinat_33921105/article/details/104142623" target="_blank" rel="noopener" title="作为一个程序员，内存和磁盘的这些事情，你不得不知道啊！！！">
+				<span class="desc oneline">截止目前，我已经分享了如下几篇文章：
+一个程序在计算机中是如何运行的？超级干货！！！
+作为一个程序员，CPU的这些硬核知识你必须会！
+作为一个程序员，内存的这些硬核知识你必须懂！
+这些知识可以说是我们...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_39190897/article/details/104149233","strategy":"BlogCommendHotData","index":"19"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_39190897/article/details/104149233" target="_blank"  rel="noopener" title="渗透测试-灰鸽子远控木马">
+		<h4 class="text-truncate oneline">
+				渗透测试-灰鸽子远控木马		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-15</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					316</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_39190897/article/details/104149233" target="_blank" rel="noopener" title="渗透测试-灰鸽子远控木马">
+				<span class="desc oneline">木马概述
+灰鸽子（ Huigezi），原本该软件适用于公司和家庭管理，其功能十分强大，不但能监视摄像头、键盘记录、监控桌面、文件操作等。还提供了黑客专用功能，如：伪装系统图标、随意更换启动项名称和表...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_42029733/article/details/104152686","strategy":"BlogCommendHotData","index":"20"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_42029733/article/details/104152686" target="_blank"  rel="noopener" title="Python：爬取疫情每日数据">
+		<h4 class="text-truncate oneline">
+				Python：爬取疫情每日数据		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-15</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2657</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_42029733/article/details/104152686" target="_blank" rel="noopener" title="Python：爬取疫情每日数据">
+				<span class="desc oneline">前言
+目前每天各大平台，如腾讯、今日头条都会更新疫情每日数据，他们的数据源都是一样的，主要都是通过各地的卫健委官网通报。
+以全国、湖北和上海为例，分别为以下三个网站：
+国家卫健委官网：http://w...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	<div class="recommend-item-box recommend-recommend-box"><script type="text/javascript" src="//rabc1.iteye.com/production/res/rxjg.js?pkcgstj=jm"></script></div>
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/harvic880925/article/details/104176042","strategy":"BlogCommendHotData","index":"21"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/harvic880925/article/details/104176042" target="_blank"  rel="noopener" title="这个世界上人真的分三六九等，你信吗？">
+		<h4 class="text-truncate oneline">
+				这个世界上人真的分三六九等，你信吗？		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/harvic880925/article/details/104176042" target="_blank" rel="noopener" title="这个世界上人真的分三六九等，你信吗？">
+				<span class="desc oneline">偶然间，在知乎上看到一个问题
+
+
+
+一时间，勾起了我深深的回忆。
+
+以前在厂里打过两次工，做过家教，干过辅导班，做过中介。零下几度的晚上，贴过广告，满脸、满手地长冻疮。
+
+
+
+再回首那段岁月，虽然苦，...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/JiuZhang_ninechapter/article/details/104197117","strategy":"BlogCommendHotData","index":"22"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/JiuZhang_ninechapter/article/details/104197117" target="_blank"  rel="noopener" title="B 站上有哪些很好的学习资源?">
+		<h4 class="text-truncate oneline">
+				B 站上有哪些很好的学习资源?		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-06</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					3万+</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/JiuZhang_ninechapter/article/details/104197117" target="_blank" rel="noopener" title="B 站上有哪些很好的学习资源?">
+				<span class="desc oneline">哇说起B站，在小九眼里就是宝藏般的存在，放年假宅在家时一天刷6、7个小时不在话下，更别提今年的跨年晚会，我简直是跪着看完的！！
+最早大家聚在在B站是为了追番，再后来我在上面刷欧美新歌和漂亮小姐姐的舞蹈...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/jdcdev_/article/details/104208023","strategy":"BlogCommendHotData","index":"23"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/jdcdev_/article/details/104208023" target="_blank"  rel="noopener" title="雷火神山直播超两亿，Web播放器事件监听是怎么实现的？">
+		<h4 class="text-truncate oneline">
+				雷火神山直播超两亿，Web播放器事件监听是怎么实现的？		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-07</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					5359</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/jdcdev_/article/details/104208023" target="_blank" rel="noopener" title="雷火神山直播超两亿，Web播放器事件监听是怎么实现的？">
+				<span class="desc oneline">Web播放器解决了在手机浏览器和PC浏览器上播放音视频数据的问题，让视音频内容可以不依赖用户安装App，就能进行播放以及在社交平台进行传播。在视频业务大数据平台中，播放数据的统计分析非常重要，所以We...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/xinzhifu1/article/details/104228470","strategy":"BlogCommendHotData","index":"24"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/xinzhifu1/article/details/104228470" target="_blank"  rel="noopener" title="3万字总结，Mysql优化之精髓">
+		<h4 class="text-truncate oneline">
+				3万字总结，Mysql优化之精髓		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-08</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					9246</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/xinzhifu1/article/details/104228470" target="_blank" rel="noopener" title="3万字总结，Mysql优化之精髓">
+				<span class="desc oneline">本文知识点较多，篇幅较长，请耐心学习
+
+MySQL已经成为时下关系型数据库产品的中坚力量，备受互联网大厂的青睐，出门面试想进BAT，想拿高工资，不会点MySQL优化知识，拿offer的成功率会大大下降...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_42768234/article/details/104249339","strategy":"BlogCommendHotData","index":"25"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_42768234/article/details/104249339" target="_blank"  rel="noopener" title="Python新型冠状病毒疫情数据自动爬取+统计+发送报告+数据屏幕（三）发送篇">
+		<h4 class="text-truncate oneline">
+				Python新型冠状病毒疫情数据自动爬取+统计+发送报告+数据屏幕（三）发送篇		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-12</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					4164</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_42768234/article/details/104249339" target="_blank" rel="noopener" title="Python新型冠状病毒疫情数据自动爬取+统计+发送报告+数据屏幕（三）发送篇">
+				<span class="desc oneline">今天介绍的项目是使用 Itchat 发送统计报告
+
+项目功能设计：
+
+定时爬取疫情数据存入Mysql
+进行数据分析制作疫情报告
+使用itchat给亲人朋友发送分析报告
+基于Django做数据屏幕
+使用...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/sinat_33921105/article/details/104256879","strategy":"BlogCommendHotData","index":"26"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/sinat_33921105/article/details/104256879" target="_blank"  rel="noopener" title="作为程序员的我，大学四年一直自学，全靠这些实用工具和学习网站！">
+		<h4 class="text-truncate oneline">
+				作为程序员的我，大学四年一直自学，全靠这些实用工具和学习网站！		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-11</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					9109</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/sinat_33921105/article/details/104256879" target="_blank" rel="noopener" title="作为程序员的我，大学四年一直自学，全靠这些实用工具和学习网站！">
+				<span class="desc oneline">我本人因为高中沉迷于爱情，导致学业荒废，后来高考，毫无疑问进入了一所普普通通的大学，实在惭愧????
+我又是那么好强，现在学历不行，没办法改变的事情了，所以，进入大学开始，我就下定决心，一定要让自己掌...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/Logintern09/article/details/104259935","strategy":"BlogCommendHotData","index":"27"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/Logintern09/article/details/104259935" target="_blank"  rel="noopener" title="粒子群算法求解物流配送路线问题（python）">
+		<h4 class="text-truncate oneline">
+				粒子群算法求解物流配送路线问题（python）		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-15</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					224</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/Logintern09/article/details/104259935" target="_blank" rel="noopener" title="粒子群算法求解物流配送路线问题（python）">
+				<span class="desc oneline">1.Matlab实现粒子群算法的程序代码：https://www.cnblogs.com/kexinxin/p/9858664.html
+matlab代码求解函数最优值：https://blog.cs...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_37649168/article/details/104265388","strategy":"BlogCommendHotData","index":"28"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_37649168/article/details/104265388" target="_blank"  rel="noopener" title="教你如何编写第一个简单的爬虫">
+		<h4 class="text-truncate oneline">
+				教你如何编写第一个简单的爬虫		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-11</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					4238</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_37649168/article/details/104265388" target="_blank" rel="noopener" title="教你如何编写第一个简单的爬虫">
+				<span class="desc oneline">很多人知道爬虫，也很想利用爬虫去爬取自己想要的数据，那么爬虫到底怎么用呢？今天就教大家编写一个简单的爬虫。
+下面以爬取笔者的个人博客网站为例获取第一篇文章的标题名称，教大家学会一个简单的爬虫。
+第一步...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_40693643/article/details/104275460","strategy":"BlogCommendHotData","index":"29"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_40693643/article/details/104275460" target="_blank"  rel="noopener" title="前端JS初级面试题二    (｡•ˇ‸ˇ•｡)老铁们！快来瞧瞧自己都会了么">
+		<h4 class="text-truncate oneline">
+				前端JS初级面试题二    (｡•ˇ‸ˇ•｡)老铁们！快来瞧瞧自己都会了么		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-14</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2308</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_40693643/article/details/104275460" target="_blank" rel="noopener" title="前端JS初级面试题二    (｡•ˇ‸ˇ•｡)老铁们！快来瞧瞧自己都会了么">
+				<span class="desc oneline">1. 传统事件绑定和符合W3C标准的事件绑定有什么区别？
+传统事件绑定
+&lt;div onclick=&quot;&quot;&gt;123&lt;/div&gt;
+div1.onclick = function(){...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_36338224/article/details/104287582","strategy":"BlogCommendHotData","index":"30"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_36338224/article/details/104287582" target="_blank"  rel="noopener" title="情人节来了，教你个用 Python 表白的技巧">
+		<h4 class="text-truncate oneline">
+				情人节来了，教你个用 Python 表白的技巧		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-12</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					5232</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_36338224/article/details/104287582" target="_blank" rel="noopener" title="情人节来了，教你个用 Python 表白的技巧">
+				<span class="desc oneline">作者：@明哥
+公众号：Python编程时光
+
+2020年，这个看起来如此浪漫的年份，你还是一个人吗？
+
+难不成我还能是一条狗？
+
+18年的时候，写过一篇介绍如何使用 Python 来表白的文章。
+虽然...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/Sui_da_xia/article/details/104294743","strategy":"BlogCommendHotData","index":"31"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/Sui_da_xia/article/details/104294743" target="_blank"  rel="noopener" title="用Python开发实用程序 – 计算器">
+		<h4 class="text-truncate oneline">
+				用Python开发实用程序 – 计算器		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					5402</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/Sui_da_xia/article/details/104294743" target="_blank" rel="noopener" title="用Python开发实用程序 – 计算器">
+				<span class="desc oneline">作者：隋顺意
+一段时间前，自己制作了一个库 “sui-math”。这其实是math的翻版。做完后，python既然可以轻易的完成任何的数学计算，何不用python开发一个小程序专门用以计算呢？
+现在我...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_43570367/article/details/104294856","strategy":"BlogCommendHotData","index":"32"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_43570367/article/details/104294856" target="_blank"  rel="noopener" title="经典算法（19）教你两分钟学会【选择排序】">
+		<h4 class="text-truncate oneline">
+				经典算法（19）教你两分钟学会【选择排序】		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					1802</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_43570367/article/details/104294856" target="_blank" rel="noopener" title="经典算法（19）教你两分钟学会【选择排序】">
+				<span class="desc oneline">这篇博客使用图文并茂的方式讲解选择排序算法，并有完整的算法逻辑以及代码实现。...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_43611144/article/details/104298256","strategy":"BlogCommendHotData","index":"33"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_43611144/article/details/104298256" target="_blank"  rel="noopener" title="Python学习笔记（语法篇）">
+		<h4 class="text-truncate oneline">
+				Python学习笔记（语法篇）		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-14</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					481</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_43611144/article/details/104298256" target="_blank" rel="noopener" title="Python学习笔记（语法篇）">
+				<span class="desc oneline">本篇博客大部分内容摘自埃里克·马瑟斯所著的《Python编程：从入门到实战》（入门类书籍），采用举例的方式进行知识点提要
+关于Python学习书籍推荐文章 《学习Python必备的8本书》
+Pytho...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/xufive/article/details/104299791","strategy":"BlogCommendHotData","index":"34"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/xufive/article/details/104299791" target="_blank"  rel="noopener" title="用Python打造你的专属情人节贺卡，赶快发给TA浪漫一下吧">
+		<h4 class="text-truncate oneline">
+				用Python打造你的专属情人节贺卡，赶快发给TA浪漫一下吧		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					4461</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/xufive/article/details/104299791" target="_blank" rel="noopener" title="用Python打造你的专属情人节贺卡，赶快发给TA浪漫一下吧">
+				<span class="desc oneline">明天就是情人节了。这个情人节，注定是一个不能约会的情人节，但不能约会不代表不能浪漫。古人比我们出生早，那些浪漫的诗词早都被他们挖掘一空，比诗词我们肯定没有机会了。好在我们还有Python，不然都不知道...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/qq_43786066/article/details/104300168","strategy":"BlogCommendHotData","index":"35"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/qq_43786066/article/details/104300168" target="_blank"  rel="noopener" title="Python绘图与可视化">
+		<h4 class="text-truncate oneline">
+				Python绘图与可视化		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-14</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					346</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/qq_43786066/article/details/104300168" target="_blank" rel="noopener" title="Python绘图与可视化">
+				<span class="desc oneline">文章目录使用的库Matplotlib程序包绘图命令的扩展及其属性设置
+使用的库
+Python有很多可视化工具，如：Matplotlib。
+Matplotlib是一种2D的绘图库，它可以支持硬拷贝和跨系...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_44385465/article/details/104301866","strategy":"BlogCommendHotData","index":"36"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_44385465/article/details/104301866" target="_blank"  rel="noopener" title="计算机考研经验总结">
+		<h4 class="text-truncate oneline">
+				计算机考研经验总结		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-13</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2972</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_44385465/article/details/104301866" target="_blank" rel="noopener" title="计算机考研经验总结">
+				<span class="desc oneline">计算机考研指导建议背景开始备考时间学校选择复习计划学科复习考研资料和平台心得杂杂答疑
+背景
+    我是广东双非本科计算机类专业，大一高数没学好，英语在大四最后一次考试里过了6级，专业课掌握情况尚好。...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/weixin_45662626/article/details/104309539","strategy":"BlogCommendHotData","index":"37"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/weixin_45662626/article/details/104309539" target="_blank"  rel="noopener" title="MySQL表的增删查改(提高篇)">
+		<h4 class="text-truncate oneline">
+				MySQL表的增删查改(提高篇)		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-14</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					1874</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/weixin_45662626/article/details/104309539" target="_blank" rel="noopener" title="MySQL表的增删查改(提高篇)">
+				<span class="desc oneline">MySQL表的增删查改(基本篇)
+接上一篇MySQL表基本的增删查改，下面看一下提高篇：
+一、数据库约束
+1、约束类型
+NOT NULL：不为空约束。创建表时，可以指定某列不为空
+UNIQUE ：唯一...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/a1439775520/article/details/104309789","strategy":"BlogCommendHotData","index":"38"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/a1439775520/article/details/104309789" target="_blank"  rel="noopener" title="Java实现 LeetCode 35 搜索插入位置">
+		<h4 class="text-truncate oneline">
+				Java实现 LeetCode 35 搜索插入位置		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-14</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					392</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/a1439775520/article/details/104309789" target="_blank" rel="noopener" title="Java实现 LeetCode 35 搜索插入位置">
+				<span class="desc oneline">35. 搜索插入位置
+给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
+你可以假设数组中无重复元素。
+示例 1:
+输入: [1,...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+<div class="recommend-item-box type_blog clearfix"  data-report-click='{"mod":"popu_387","dest":"https://blog.csdn.net/u011064099/article/details/104314265","strategy":"BlogCommendHotData","index":"39"}'>
+	<div class="content">
+		<a href="https://blog.csdn.net/u011064099/article/details/104314265" target="_blank"  rel="noopener" title="整理一波国外前端学习网站">
+		<h4 class="text-truncate oneline">
+				整理一波国外前端学习网站		</h4>
+		<div class="info-box d-flex align-content-center">
+			<p class="date-and-readNum oneline">
+				<span class="date hover-show">02-14</span>
+				<span class="read-num hover-hide">
+					阅读数 
+					2084</span>
+				</p>
+			</div>
+		</a>
+		<p class="content">
+			<a href="https://blog.csdn.net/u011064099/article/details/104314265" target="_blank" rel="noopener" title="整理一波国外前端学习网站">
+				<span class="desc oneline">国内的普通开发者对于掌握一门新的技术不知道从哪里下手，看哪些书。为了获得相关知识会关注各种公众号、购买各种视频课程来学习，但由于这些内容本身有碎片化的特点，效果往往不太理想。以至于付出了大量的时间到最...</span>
+			</a>
+			<span class="blog_title_box oneline no-title">
+									<span class="type-show type-show-blog type-show-after">博文</span>
+												</span>
+		</p>
+	</div>
+	</div>
+
+	
+	
+                    <div class="recommend-item-box type_hot_word">
+                    <div class="content clearfix">
+                        <div class="float-left">
+                                                                                <span>
+                                <a href="https://blog.csdn.net/yilovexing/article/details/80577510" target="_blank">
+                                python</a>
+                            </span>
+                                                        <span>
+                                <a href="https://blog.csdn.net/slwbcsdn/article/details/53458352" target="_blank">
+                                json</a>
+                            </span>
+                                                        <span>
+                                <a href="https://blog.csdn.net/csdnnews/article/details/83753246" target="_blank">
+                                java</a>
+                            </span>
+                                                        <span>
+                                <a href="https://blog.csdn.net/qq_35077512/article/details/88952519" target="_blank">
+                                mysql</a>
+                            </span>
+                                                        <span>
+                                <a href="https://blog.csdn.net/pdcfighting/article/details/80297499" target="_blank">
+                                pycharm</a>
+                            </span>
+                                                        <span>
+                                <a href="https://blog.csdn.net/sinyu890807/article/details/97142065" target="_blank">
+                                android</a>
+                            </span>
+                                                        <span>
+                                <a href="https://blog.csdn.net/gexiaoyizhimei/article/details/100122368" target="_blank">
+                                linux</a>
+                            </span>
+                                                        <span>
+                                <a href="https://download.csdn.net/download/xhg_gszs/10978826" target="_blank">
+                                json格式</a>
+                            </span>
+                                                    
+                                                                                <span>
+                                <a href="https://www.csdn.net/gather_14/MtjaEg2sLWRvd25sb2Fk.html" target="_blank">
+                                c# 为空 判断 委托</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_16/MtjaEg3sLWRvd25sb2Fk.html" target="_blank">
+                                c#记事本颜色</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_1e/MtjaEg4sLWRvd25sb2Fk.html" target="_blank">
+                                c# 系统默认声音</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_2c/MtjaEg5sLWJsb2cO0O0O.html" target="_blank">
+                                js中调用c#方法参数</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_1e/MtjaIgwsLWRvd25sb2Fk.html" target="_blank">
+                                c#引入dll文件报错</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_10/MtjaIgxsLWRvd25sb2Fk.html" target="_blank">
+                                c#根据名称实例化</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_1b/MtjaIgysLWRvd25sb2Fk.html" target="_blank">
+                                c#从邮件服务器获取邮件</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_11/MtjaIgzsLWRvd25sb2Fk.html" target="_blank">
+                                c# 保存文件夹</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_11/MtjaIg0sLWRvd25sb2Fk.html" target="_blank">
+                                c#代码打包引用</a>
+                            </span>
+                                                        <span>
+                                <a href="https://www.csdn.net/gather_1d/MtjaIg1sLWRvd25sb2Fk.html" target="_blank">
+                                c# 压缩效率</a>
+                            </span>
+                                                                            </div>
+                    </div>
+                    </div>
+                                    <div class="recommend-loading-box">
+                    <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+                </div>
+                <div class="recommend-end-box">
+                    <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+                </div>
+            </div>
+                            <div class="template-box">
+                    <span>©️2019 CSDN</span><span class="point"></span>
+                <span>皮肤主题: 大白</span>
+                <span> 设计师:
+                                            CSDN官方博客                                    </span>
+                </div>
+                    </main>
+        <aside class="blog_container_aside">
+	<!--主页引入-->
+
+    <div id="asideProfile" class="aside-box">
+    <!-- <h3 class="aside-title">个人资料</h3> -->
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/qq_42305209"  data-report-click='{"mod":"popu_379","dest":"https://blog.csdn.net/qq_42305209"}'>
+                <img src="https://profile.csdnimg.cn/6/6/8/3_qq_42305209" class="avatar_pic" username='qq_42305209'>
+                                    <img src="https://g.csdnimg.cn/static/user-reg-year/1x/2.png" class="user-years">
+                            </a>
+                    </div>
+        <div class="user-info d-flex flex-column profile-intro-name-box">
+            <div>
+                                <span class="name csdn-tracking-statistics tracking-click "   data-report-click='{"mod":"popu_379","dest":"https://blog.csdn.net/qq_42305209"}' username='qq_42305209'>
+                    <a href="https://blog.csdn.net/qq_42305209" class="" id="uid" title='花开心就好'>
+                    花开心就好                    </a>
+                </span>
+            </div>
+            <div class="profile-intro-name-boxFooter">
+                                                <span class="personal-home-page" style='right:-96px;'><a target="_blank" href="https://me.csdn.net/qq_42305209">TA的个人主页 ></a></span>
+                            </div>
+        </div>
+    </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="31">
+                            <dt><a href="https://blog.csdn.net/qq_42305209" data-report-query="t=1">原创</a></dt>
+                <dd><a href="https://blog.csdn.net/qq_42305209" data-report-query="t=1"><span class="count">31</span></a></dd>
+                    </dl>
+        <dl class="text-center" id="fanBox" title="4">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">4</span></dd>
+        </dl>
+        <dl class="text-center" title="27">
+            <dt>获赞</dt>
+            <dd><span class="count">27</span></dd>
+        </dl>
+        <dl class="text-center" title="0">
+            <dt>评论</dt>
+            <dd><span class="count">0</span></dd>
+        </dl>
+        <dl class="text-center" title="3684">
+            <dt>访问</dt>
+            <dd><span class="count">3684</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl class="aside-box-footerClassify">
+            <dt>等级:</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="2级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-2"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl title="109588">
+            <dt>周排名:</dt>
+            <dd>
+                <a class="grade-box-rankA" href="https://blog.csdn.net/rank/writing_rank" target="_blank">
+                    10万+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>积分:</dt>
+            <dd title="374">
+                374            </dd>
+        </dl>
+        <dl title="315343">
+            <dt>总排名:</dt>
+            <dd>
+                <a class="grade-box-rankA" href="https://blog.csdn.net/rank/writing_rank_total" target="_blank">
+                    31万+                </a>
+            </dd>
+        </dl>
+    </div>
+    <div class="aside-box-footer">
+                    <div class="badge-box d-flex">
+                <div class="profile-medal">勋章:</div>
+                <div class="badge d-flex">
+                                                                                                        <div class="icon-badge" title="GitHub">
+                                    <div class="mouse-box">
+                                        <img src="https://g.csdnimg.cn/static/user-medal/github.svg" alt="">
+                                        <div class="icon-arrow"></div>
+                                    </div>
+                                    <div class="grade-detail-box">
+                                        <div class="pos-box">
+                                            <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                                                <img src="https://g.csdnimg.cn/static/user-medal/github.svg" alt="">
+                                                <p>GitHub</p>
+                                            </div>
+                                            <div class="right-box">
+                                                绑定GitHub第三方账户获取                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                                                                                <div class="icon-badge" title="签到新秀">
+                                    <div class="mouse-box">
+                                        <img src="https://g.csdnimg.cn/static/user-medal/qiandao-20.png" alt="">
+                                        <div class="icon-arrow"></div>
+                                    </div>
+                                    <div class="grade-detail-box">
+                                        <div class="pos-box">
+                                            <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                                                <img src="https://g.csdnimg.cn/static/user-medal/qiandao-20.png" alt="">
+                                                <p>签到新秀</p>
+                                            </div>
+                                            <div class="right-box">
+                                                累计签到获取，不积跬步，无以至千里，继续坚持！                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                                                                                <div class="icon-badge" title="持之以恒">
+                                    <div class="mouse-box">
+                                        <img src="https://g.csdnimg.cn/static/user-medal/chizhiyiheng.png" alt="">
+                                        <div class="icon-arrow"></div>
+                                    </div>
+                                    <div class="grade-detail-box">
+                                        <div class="pos-box">
+                                            <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                                                <img src="https://g.csdnimg.cn/static/user-medal/chizhiyiheng.png" alt="">
+                                                <p>持之以恒</p>
+                                            </div>
+                                            <div class="right-box">
+                                                授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                                                                                <div class="icon-badge" title="勤写标兵Lv2">
+                                    <div class="mouse-box">
+                                        <img src="https://g.csdnimg.cn/static/user-medal/qixiebiaobing-2.png" alt="">
+                                        <div class="icon-arrow"></div>
+                                    </div>
+                                    <div class="grade-detail-box">
+                                        <div class="pos-box">
+                                            <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                                                <img src="https://g.csdnimg.cn/static/user-medal/qixiebiaobing-2.png" alt="">
+                                                <p>勤写标兵Lv2</p>
+                                            </div>
+                                            <div class="right-box">
+                                                授予每个自然周发布4篇到6篇原创IT博文的用户。本勋章将于次周周三上午根据用户上周的博文发布情况由系统自动颁发。                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                                                        </div>
+                <script>
+                    (function($) {
+                        setTimeout(function() {
+                            $('div.icon-badge.show-moment').removeClass('show-moment');
+                        }, 5000);
+                    })(window.jQuery)
+                </script>
+            </div>
+                
+    </div>
+        <div class="profile-intro-name-boxOpration">
+        <div class="opt-letter-watch-box">
+                            <a class="personal-watch bt-button" id="btnAttent" data-report-click='{"mod":"popu_379"}'>关注</a>
+                    </div>
+        <div class='opt-letter-watch-box'>
+            <a class="bt-button btn-red-hollow personal-letter" href=https://im.csdn.net/im/main.html?userName=qq_42305209 target="_blank" rel="noopener">私信</a>
+        </div>
+    </div>
+    </div>
+<script>
+    function watchBtnChange(flag, username) {
+        $('span.blog-expert-button-follow').each(function(index) {
+            if (flag) {
+                if ($(this).attr("data-name") == username) {
+                    $(this).html('<span class="hover-hide">已关注</span><span class="hover-show">取消</span>').removeClass('btn-red-follow').addClass('btn-gray-follow attented');
+                }
+            } else {
+                if ($(this).attr("data-name") == username) {
+                    $(this).html("关注").addClass('btn-red-follow').removeClass('btn-gray-follow attented');
+                }
+            }
+        })
+        if (username == $('p.csdn-tracking-statistics').attr("username")) {
+            if (flag) {
+                $('#btnAttent').addClass("attented").text("已关注").removeClass('btn-red-hollow').addClass('btn-gray-hollow');
+                changeFans(1)
+            } else {
+                $('#btnAttent').text("关注").addClass('btn-red-hollow').removeClass('btn-gray-hollow attented');
+                changeFans(-1)
+            }
+        }
+
+    }
+
+    function changeFans(num) {
+        if ($('#fan').text().indexOf('+') < 0) {
+            $('#fan').text(parseInt($('#fan').text()) + num);
+        } else {
+            $('#fanBox').attr('title', parseInt($('#fanBox').attr('title')) + num);
+        }
+    }
+    window.csdn = window.csdn ? window.csdn : {};
+    window.csdn.watchBtnChange = watchBtnChange;
+</script><div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-report-click='{"mod":"popu_4"}' data-report-view='{"mod":"popu_4"}' style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <div id="kp_box_56" data-pid="56"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 博客内页左上视窗-20181120 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:250px"
+     data-ad-client="ca-pub-1076724771190722"
+     data-ad-slot="7700527946"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=56&a=703&c=0&k=&d=1&t=3&u=650bf7730f6d4d17a02ec4c40abee270"></div>    </div>
+</div>
+<div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix">
+                        <li class="clearfix">
+                <a data-report-click='{"mod":"popu_382","dest":"https://blog.csdn.net/qq_42305209/article/details/104344526"}' href="https://blog.csdn.net/qq_42305209/article/details/104344526" target="_blank" >
+                                        Java并发编程基础（1）—线程                </a>
+            </li>
+                        <li class="clearfix">
+                <a data-report-click='{"mod":"popu_382","dest":"https://blog.csdn.net/qq_42305209/article/details/104314184"}' href="https://blog.csdn.net/qq_42305209/article/details/104314184" target="_blank" >
+                                        synchronized的实现原理与应用                </a>
+            </li>
+                        <li class="clearfix">
+                <a data-report-click='{"mod":"popu_382","dest":"https://blog.csdn.net/qq_42305209/article/details/104313722"}' href="https://blog.csdn.net/qq_42305209/article/details/104313722" target="_blank" >
+                                        Java死锁详解                </a>
+            </li>
+                        <li class="clearfix">
+                <a data-report-click='{"mod":"popu_382","dest":"https://blog.csdn.net/qq_42305209/article/details/104296062"}' href="https://blog.csdn.net/qq_42305209/article/details/104296062" target="_blank" >
+                                        Java内存模型详解                </a>
+            </li>
+                        <li class="clearfix">
+                <a data-report-click='{"mod":"popu_382","dest":"https://blog.csdn.net/qq_42305209/article/details/104278714"}' href="https://blog.csdn.net/qq_42305209/article/details/104278714" target="_blank" >
+                                        JVM类加载机制详解                </a>
+            </li>
+                    </ul>
+    </div>
+</div>
+    <div id="asideCategory" class="aside-box flexible-box"
+         style="display:block!important;">
+    <h3 class="aside-title">分类专栏</h3>
+    <div class="aside-content">
+        <ul>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9714729.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9714729.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9714729.html">
+                                                    <img src="https://img-blog.csdnimg.cn/20190918140158853.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">Jvm</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">2篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9416878.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9416878.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9416878.html">
+                                                    <img src="https://img-blog.csdnimg.cn/20190918140145169.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">java</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">10篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9527681.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9527681.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9527681.html">
+                                                    <img src="https://img-blog.csdnimg.cn/20190918135101160.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">mysql</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">9篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9580729.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9580729.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9580729.html">
+                                                    <img src="https://img-blog.csdnimg.cn/20190918140145169.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">Spring</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">2篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9578258.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9578258.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9578258.html">
+                                                    <img src="https://img-blog.csdnimg.cn/2019091813595558.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">Kafka</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">1篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9577903.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9577903.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9577903.html">
+                                                    <img src="https://img-blog.csdnimg.cn/2019092715111047.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">Redis</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">1篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9569992.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9569992.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9569992.html">
+                                                    <img src="https://img-blog.csdnimg.cn/20190927151124774.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">Nginx</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">1篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9458163.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9458163.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9458163.html">
+                                                    <img src="https://img-blog.csdnimg.cn/20190918140145169.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">Springboot</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">2篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9052782.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9052782.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9052782.html">
+                                                    <img src="https://img-blog.csdnimg.cn/20190927151117521.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">学习</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">15篇</span>
+                                            </a>
+                </li>
+                            <li class="">
+                                        <a class="clearfix" 
+                                                    data-report-click='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9052783.html"}'
+                            data-report-view='{"mod":"popu_537","strategy":"","dest":"https://blog.csdn.net/qq_42305209/category_9052783.html"}'
+                                               href="https://blog.csdn.net/qq_42305209/category_9052783.html">
+                                                    <img src="https://img-blog.csdnimg.cn/20190927151132530.png" alt="">
+                                                <!--####是否付费-->
+                        <span class="title oneline"><span class="text">成长</span>
+                                                    </span>
+                        <!--####是否付费-->
+                                                    <span class="count float-right">15篇</span>
+                                            </a>
+                </li>
+                    </ul>
+    </div>
+        <p class="text-center">
+        <a class="btn btn-link-blue flexible-btn" data-fbox="aside-archive">展开</a>
+    </p>
+    </div>
+<div id="asideArchive" class="aside-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/qq_42305209/article/month/2020/02" data-report-click='{"mod":"popu_538","dest":"https://blog.csdn.net/qq_42305209/article/month/2020/02"}'>
+                    2020年2月                    <span class="count float-right">15篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/qq_42305209/article/month/2019/12" data-report-click='{"mod":"popu_538","dest":"https://blog.csdn.net/qq_42305209/article/month/2019/12"}'>
+                    2019年12月                    <span class="count float-right">9篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/qq_42305209/article/month/2019/11" data-report-click='{"mod":"popu_538","dest":"https://blog.csdn.net/qq_42305209/article/month/2019/11"}'>
+                    2019年11月                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/qq_42305209/article/month/2019/10" data-report-click='{"mod":"popu_538","dest":"https://blog.csdn.net/qq_42305209/article/month/2019/10"}'>
+                    2019年10月                    <span class="count float-right">6篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/qq_42305209/article/month/2019/09" data-report-click='{"mod":"popu_538","dest":"https://blog.csdn.net/qq_42305209/article/month/2019/09"}'>
+                    2019年9月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+    </div>
+<div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list">
+							<li>
+
+                    <a
+                    data-report-click='{"mod":"popu_541","dest":"https://blog.csdn.net/qq_42305209/article/details/104313722"}' 
+                     href="https://blog.csdn.net/qq_42305209/article/details/104313722" >
+                                                Java死锁详解                    </a>
+					<p class="read">阅读数 <span>1028</span></p>
+				</li>
+							<li>
+
+                    <a
+                    data-report-click='{"mod":"popu_541","dest":"https://blog.csdn.net/qq_42305209/article/details/100552090"}' 
+                     href="https://blog.csdn.net/qq_42305209/article/details/100552090" >
+                                                JQ实现前台购物车按钮及输入数量算总金额传输到后台                    </a>
+					<p class="read">阅读数 <span>226</span></p>
+				</li>
+							<li>
+
+                    <a
+                    data-report-click='{"mod":"popu_541","dest":"https://blog.csdn.net/qq_42305209/article/details/104278714"}' 
+                     href="https://blog.csdn.net/qq_42305209/article/details/104278714" >
+                                                JVM类加载机制详解                    </a>
+					<p class="read">阅读数 <span>209</span></p>
+				</li>
+							<li>
+
+                    <a
+                    data-report-click='{"mod":"popu_541","dest":"https://blog.csdn.net/qq_42305209/article/details/104314184"}' 
+                     href="https://blog.csdn.net/qq_42305209/article/details/104314184" >
+                                                synchronized的实现原理与应用                    </a>
+					<p class="read">阅读数 <span>168</span></p>
+				</li>
+							<li>
+
+                    <a
+                    data-report-click='{"mod":"popu_541","dest":"https://blog.csdn.net/qq_42305209/article/details/104262769"}' 
+                     href="https://blog.csdn.net/qq_42305209/article/details/104262769" >
+                                                数据库的操作语句                    </a>
+					<p class="read">阅读数 <span>135</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+	<div id="asideFooter">
+			
+		<div class="aside-box">
+			<div id="kp_box_57" data-pid="57"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 博客内页左下视窗-20181130 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:250px"
+     data-ad-client="ca-pub-1076724771190722"
+     data-ad-slot="1894159733"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=57&a=707&c=0&k=&d=1&t=3&u=9f9171f5fbfb4dff881ee2748da7aff8"></div>		</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).parents("p.text-center").remove();
+	})
+</script>
+<script src="https://g.csdnimg.cn/user-tooltip/1.9/user-tooltip.js"  type="text/javascript"></script>
+    </div>
+                 <div class="recommend-right  align-items-stretch clearfix" data-type="recommend" style="display: none">
+        <aside class="recommend-right_aside">
+            <div id="recommend-right" style="height:100%;">
+                <ul class="recommend-fixed-box">
+                    
+                </ul>
+            </div>    
+        </aside>    
+    </div> 
+
+    </div>
+
+<div class="mask-dark"></div>
+<div class="tool-box vertical">
+	<ul class="meau-list">
+		<li class="btn-like-box long-width">
+			<button class=" long-height hover-box btn-like " title="点赞">
+				<svg class="icon active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<span class="hover-show text-box text">
+					<span class="no-active">点赞</span>
+					<span class="active">取消点赞</span>
+				</span>
+				<p id="supportCount">1</p>	
+			</button>
+		</li>
+		<li class="to-commentBox" id = 'sharePost' data-report-click='{"mod":"popu_794","dest":"https://blog.csdn.net/qq_42305209/article/details/104345335"}'>
+			<a class="btn-comments low-height hover-box" >
+				<svg class="icon hover-hide" aria-hidden="true" style="padding-top: 3px;">
+					<use xlink:href="#icon-csdnc-fenxiang"></use>
+				</svg>
+				<span class="hover-show text">海报</span>
+				<p class="">
+				</p>
+			</a>
+		</li>
+		<li class="to-commentBox">
+						<a class="btn-comments low-height hover-box" title="写评论" href="#commentBox">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg>
+				<span class="hover-show text">评论</span>
+				<p class="">
+										</p>
+			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<a class="btn-toc low-height hover-box btn-comments" title="目录">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg>
+				<span class="hover-show text">目录</span>
+			</a>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+
+		</li>
+		<li>
+			<a class="btn-bookmark low-height hover-box btn-comments"  data-report-click='{"mod":"popu_824"}' title="收藏">
+				<svg class="icon active hover-hide" aria-hidden="true" style="padding-top: 2px;">
+					<use xlink:href="#icon-shoucangjia"></use>
+				</svg>
+				<svg class="icon no-active hover-hide" aria-hidden="true" style="padding-top: 2px;">
+					<use xlink:href="#icon-csdnc-Collection-G" ></use>
+				</svg>
+					<span class="hover-show text">收藏</span>
+				<!-- <span class="hover-show text-box text">
+					<span class="no-active">收藏</span>
+					<span class="active">取消收藏</span>
+				</span> -->
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<div class="weixin-qr btn-comments low-height hover-box" >
+				<a id="btnQrShare" class="bds_weixin clear-share-style" data-report-click='{"mod":"popu_831","dest":""}'  title="手机看"></a>
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-usephone"></use>
+				</svg>
+				<span class="hover-show text text3">
+					手机看
+				</span>
+			</div>
+		</li>
+							<li class="widescreen-hide">
+				<a class="prev btn-comments low-height hover-box" href="https://blog.csdn.net/qq_42305209/article/details/104344526" title="Java并发编程基础（1）—线程">
+					<svg class="icon hover-hide" aria-hidden="true">
+						<use xlink:href="#csdnc-chevronleft"></use>
+					</svg>
+					<span class="hover-show text text3">上一篇</span>
+				</a>
+			</li>
+								<!-- 宽屏更多按钮 -->
+		<li class="widescreen-more">
+			<a class="btn-comments chat-ask-button low-height hover-box" title="快问" href="#chatqa">
+				<svg class="icon hover-hide" aria-hidden="true">
+					<use xlink:href="#csdnc-more"></use>
+				</svg>
+				<span class="hover-show text">更多</span>
+				
+			</a>
+			<ul class="widescreen-more-box">
+													<li class="widescreen-more">
+						<a class="btn-comments low-height hover-box" href="https://blog.csdn.net/qq_42305209/article/details/104344526" title="Java并发编程基础（1）—线程">
+							<svg class="icon hover-hide" aria-hidden="true">
+								<use xlink:href="#csdnc-chevronleft"></use>
+							</svg>
+							<span class="hover-show text text3">上一篇</span>
+						</a>
+					</li>
+											</ul>
+		</li>
+        		<li class="to-commentBox to-reward">
+			<a class="btn-comments low-height hover-box" data-report-click='{"mod":"popu_830" "dest":""}'  title="打赏">
+				<svg class="hover-hide" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+						<g transform="translate(-1398.000000, -486.000000)" fill-rule="nonzero">
+							<g transform="translate(1398.000000, 486.000000)">
+								<path d="M0,12 C0,16.287187 2.287187,20.2487113 6,22.3923048 C9.7128129,24.5358984 14.2871871,24.5358984 18,22.3923048 C21.712813,20.2487113 24,16.287187 24,12 C24,5.37258296 18.627417,0 12,0 C5.372583,0 0,5.37258296 0,12 Z" id="路径" fill-opacity="0.3" fill="#FF5A52"></path>
+								<path d="M2.09340659,11.9505494 C2.09340659,15.4721673 3.97216734,18.7262766 7.02197798,20.4870856 C10.0717886,22.2478946 13.8293103,22.2478946 16.8791209,20.4870856 C19.9289316,18.7262766 21.8076923,15.4721673 21.8076923,11.9505494 C21.8076923,6.50659974 17.3944991,2.09340659 11.9505495,2.09340659 C6.50659977,2.09340659 2.09340659,6.50659974 2.09340659,11.9505494 Z" id="路径" fill="#F63D47"></path>
+								<path d="M11.3005025,5.28638434 L12.7115578,5.28638434 L12.7115578,6.87854416 L14.1105528,6.87854416 C14.4,6.39607148 14.6592965,5.89550609 14.8884422,5.37081705 L16.1849246,5.82313519 C15.99799,6.23926787 15.7929648,6.58906055 15.5758794,6.88457507 L18,6.88457507 L18,9.84575109 L16.6733668,9.84575109 L16.6733668,8.03647857 L7.33869347,8.03647857 L7.33869347,9.85781291 L6,9.85781291 L6,6.87854416 L8.51457286,6.87854416 C8.31557789,6.52875147 8.08040201,6.1910206 7.80904523,5.86535155 L9.08140703,5.4009716 C9.39497488,5.80504246 9.67236181,6.29957695 9.92562814,6.88457507 L11.3065327,6.88457507 L11.3065327,5.28638434 L11.3005025,5.28638434 Z M12.8571429,13.9657994 C12.6552823,15.5675992 12.2332101,16.6234672 11.5848095,17.1394027 C10.8813559,17.8053195 9.1991844,18.2312662 6.54441188,18.4292415 L6,17.2233922 C8.22046642,17.1394027 9.68854339,16.8454395 10.3919969,16.3415024 C11.0098127,15.8735609 11.3768319,15.0456644 11.4930547,13.8578129 L12.8571429,13.9657994 Z M16.8571429,12.1435272 L16.8571429,15.9892245 L15.5161905,15.9892245 L15.5161905,13.3067319 L9.05523809,13.3067319 L9.05523809,16.1435272 L7.71428571,16.1435272 L7.71428571,12.1435272 L16.8571429,12.1435272 L16.8571429,12.1435272 Z M8.28571429,8.71495577 L15.7142857,8.71495577 L15.7142857,11.5720986 L8.28571429,11.5720986 L8.28571429,8.71495577 L8.28571429,8.71495577 Z M14.5714286,10.4292415 L14.5714286,9.28638434 L10,9.28638434 L10,10.4292415 L14.5714286,10.4292415 Z M12.9579832,16.1435272 C14.8187275,16.4853162 16.4993998,16.9018717 18,17.3931934 L17.2436975,18.4292415 C15.635054,17.8311106 13.9783914,17.3664911 12.2857143,17.0407235 L12.9579832,16.1435272 L12.9579832,16.1435272 Z" id="形状" fill="#FFFFFF"></path>
+							</g>
+						</g>
+					</g>
+				</svg>
+				<span class="hover-show text">打赏</span>
+			</a>
+							<div id="reward" class="reward-box">
+	<p class="rewad-title">打赏<span class="reward-close"><svg t="1567152543821" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10924" xmlns:xlink="http://www.w3.org/1999/xlink" width="12" height="12"><defs><style type="text/css"></style></defs><path d="M512 438.378667L806.506667 143.893333a52.032 52.032 0 1 1 73.6 73.621334L585.621333 512l294.485334 294.485333a52.074667 52.074667 0 0 1-73.6 73.642667L512 585.621333 217.514667 880.128a52.053333 52.053333 0 1 1-73.621334-73.642667L438.378667 512 143.893333 217.514667a52.053333 52.053333 0 1 1 73.621334-73.621334L512 438.378667z" fill="" p-id="10925"></path></svg></span></p>
+	<dl>
+		<dd><a href="javascript:;"><img src="https://profile.csdnimg.cn/6/6/8/3_qq_42305209" alt=""></a></dd>
+		<dt>
+			<p class="blog-name">花开心就好</p>
+			<p class="blog-discript">“你的鼓励将是我创作的最大动力”</p>
+		</dt>
+	</dl>
+	<div class="money-box">
+        			            	<span class="choosed choose_money" data-id="5">5C币</span>
+			        							<span class="choose_money" data-id="10">10C币</span>
+			        							<span class="choose_money" data-id="20">20C币</span>
+			        							<span class="choose_money" data-id="50">50C币</span>
+			        							<span class="choose_money" data-id="100">100C币</span>
+			        							<span class="choose_money" data-id="200">200C币</span>
+			        	</div>
+	<div class="sure-box">
+		<p class="is-have-money"><a class="reward-sure">确定</a></p>
+	</div>
+</div>
+
+					</li>
+        	</ul>
+</div>
+<div id = 'tool-post-common'>
+	<div class = 'tool_post_box'>
+		<img class = 'tool_post_img' src="https://csdnimg.cn/release/phoenix/write/assets/postShareBack.png" alt="">
+		<div id = 'shareCode'></div>
+	</div>
+</div>
+<div id="share-bg-shadow">
+<div id="share-qrcode-box">
+    <h3>分享到微信朋友圈</h3>
+    <div class='qrcode-img-box'>
+        <a class="btn-close">×</a>
+        <div id='shareQrCode'></div>
+	</div>
+    <p>扫一扫，手机浏览</p>
+</div>
+</div>
+<script>
+		var imgReal = new Image();
+		imgReal.src = "https://csdnimg.cn/release/phoenix/write/assets/postShareBack.png"
+</script>
+<script type=text/javascript crossorigin src="https://csdnimg.cn/release/phoenix/production/qrcode-7c90a92189.min.js"></script>
+<script type=text/javascript crossorigin src="https://csdnimg.cn/release/phoenix/production/icon-1349369f06.js"></script>
+<script src="//g.csdnimg.cn/??sharewx/1.2.1/sharewx.js" type="text/javascript"></script>
+<script type="text/javascript" crossorigin src="https://g.csdnimg.cn/collection-box/1.1.7/collection-box.js"></script><script>
+    var recommendCount = 68;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var ChannelId = 0;
+    var articleId = "104345335";
+    var commentscount = 0;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/qq_42305209/article/details/104345335";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "Java的内存区域详解。_运维_qq_42305209的博客-CSDN博客";
+    var needInsertBaidu = true;
+    // 代码段样式
+    var codeStyle = '';
+	var highlight = ["Java%E","7","%","9","A%","%E","5","%","%","%E","5","%AD%","%E","5","%","8","C%BA%E","5","%","9","F%","9","F%E","8","%AF%A","6","%E","8","%A","7","%A","3","%E","3","%","%"];//高亮数组
+
+    var share_card_url = 'https://blog.csdn.net/qq_42305209/article/shareArticleCardPage?article_id=104345335'
+    var RecommendBlogExpertList = [{"user_name":"qq_29660957","nick_name":"\u65e7\u65f6\u4f51\u5fc6","avatar":"https:\/\/profile.csdnimg.cn\/4\/6\/6\/3_qq_29660957","is_expert":false,"article_count":45,"rank":"\u5343\u91cc\u4e4b\u5916"},{"user_name":"chenpengfei1990","nick_name":"\u6211\u8981\u6253NBA","avatar":"https:\/\/profile.csdnimg.cn\/B\/F\/0\/3_chenpengfei1990","is_expert":false,"article_count":5,"rank":"\u5343\u91cc\u4e4b\u5916"},{"user_name":"weixin_43655481","nick_name":"weixin_43655481","avatar":"https:\/\/profile.csdnimg.cn\/E\/F\/8\/3_weixin_43655481","is_expert":false,"article_count":16,"rank":"\u5343\u91cc\u4e4b\u5916"},{"user_name":"ahua186186","nick_name":"ahua186186","avatar":"https:\/\/profile.csdnimg.cn\/D\/E\/C\/3_ahua186186","is_expert":false,"article_count":202,"rank":"\u5343\u91cc\u4e4b\u5916"},{"user_name":"chenhq1991","nick_name":"chenhq1991","avatar":"https:\/\/profile.csdnimg.cn\/0\/B\/E\/3_chenhq1991","is_expert":false,"article_count":153,"rank":"\u5343\u91cc\u4e4b\u5916"},{"user_name":"hongtu1993","nick_name":"\u6bdb\u5b87\u9e4f","avatar":"https:\/\/profile.csdnimg.cn\/8\/9\/F\/3_hongtu1993","is_expert":false,"article_count":27,"rank":"\u5343\u91cc\u4e4b\u5916"},{"user_name":"huangwp6012","nick_name":"huangwp6012","avatar":"https:\/\/profile.csdnimg.cn\/C\/9\/9\/3_huangwp6012","is_expert":false,"article_count":145,"rank":"\u5343\u91cc\u4e4b\u5916"},{"user_name":"u011004598","nick_name":"SuperHong123","avatar":"https:\/\/profile.csdnimg.cn\/7\/8\/6\/3_u011004598","is_expert":false,"article_count":255,"rank":"\u5343\u91cc\u4e4b\u5916"},{"user_name":"forlong401","nick_name":"forlong401","avatar":"https:\/\/profile.csdnimg.cn\/F\/4\/2\/3_forlong401","is_expert":false,"article_count":1260,"rank":"278"},{"user_name":"mycs2011","nick_name":"mycs2011","avatar":"https:\/\/profile.csdnimg.cn\/2\/5\/8\/3_mycs2011","is_expert":false,"article_count":7,"rank":"\u5343\u91cc\u4e4b\u5916"}];
+	var articleType = 1;
+	var CopyrightContent = '';
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.4/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging-3d3b805766.js"></script>
+<div class="skin-boxshadow"></div>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+</body>
+    <!-- 高亮未与 markdown兼容  -->
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.0/ckeditor/plugins/chart/chart.css" />
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.6.0/ckeditor/plugins/chart/lib/chart.min.js"></script>
+    <script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.6.0/ckeditor/plugins/chart/widget2chart.js"></script>
+    <script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/pc_wap_common-f91259fb12.js"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.0/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-light.css">
+<script>
+ // 全局声明
+ if (window.csdn === undefined) {
+      window.csdn = {};
+    }
+    window.csdn.sideToolbar = {
+        options: {
+            report:{
+                isShow: true,
+            },
+            qr: {
+                isShow: false,
+            }
+        }
+    }
+    $(function(){
+        $(document).on('click',"a.option-box[data-type='report']",function() {
+            window.csdn.userLogin.loadAjax(function(res){
+                showReport(false,articleTitles);
+            })
+        });
+    })
+</script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/iconfont/csdnc-c439e66521.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-da450fe83c.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-eccaa49577.min.js"></script>
+	<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-e2b6be7b58.min.js"></script>
+<script src="https://g.csdnimg.cn/copyright/1.0.3/copyright.js" type="text/javascript"></script>
+<script type="text/javascript"  src="https://g.csdnimg.cn/??login-box/1.1.1/30/login-box.js,login-box/1.1.1/30/login-auto.js"></script>
+<script>
+    $(".MathJax").remove();
+    if ($('div.markdown_views pre.prettyprint code.hljs').length > 0) {
+        $('div.markdown_views')[0].className = 'markdown_views';
+    }
+</script>
+<script type="text/javascript" src="https://csdnimg.cn/release/blog_mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            "HTML-CSS": {
+                    linebreaks: { automatic: true, width: "94%container" },
+                    imageFont: null
+            },
+            tex2jax: {
+                preview: "none"
+            },
+            mml2jax: {
+                preview: 'none'
+            }
+    });
+</script>
+    <script src="//g.csdnimg.cn/baidu-search/1.0.2/baidu-search.js"  type="text/javascript"></script>
+<script type="text/javascript" crossorigin src="https://g.csdnimg.cn/user-login/2.2.4/user-login.js"></script>
+</html>
